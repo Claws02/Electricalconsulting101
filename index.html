@@ -428,7 +428,7 @@
   .card-inner {
     position: relative;
     width: 100%;
-    min-height: 320px;
+    min-height: 400px;
     transform-style: preserve-3d;
     transition: transform 0.55s cubic-bezier(0.34,1.2,0.64,1);
     cursor: pointer;
@@ -447,7 +447,8 @@
     padding: 40px 44px;
     display: flex;
     flex-direction: column;
-    min-height: 320px;
+    min-height: 400px;
+    overflow-y: auto;
   }
 
   .card-face.back { transform: rotateY(180deg); background: var(--surface2); }
@@ -1086,7 +1087,7 @@ const CARDS=[
 {id:14,cat:'nec',diff:'Intermediate',fmt:'flip',q:'What does NEC Article 700 cover?',a:'Emergency Systems - power for life-safety illumination and equipment when normal supply fails',explain:'Article 700 covers emergency systems required for life safety - exit signs, egress lighting, fire pump feeders. Must transfer within 10 seconds.',ref:'NEC Article 700'},
 {id:15,cat:'nec',diff:'Intermediate',fmt:'mc',q:'NEC article covering fire alarm wiring and equipment:',choices:['Article 700','Article 725','Article 760','Article 800'],correct:2,explain:'Article 760 covers fire alarm systems - both non-power-limited (NPLFA) and power-limited (PLFA) circuits. References NFPA 72 for system design.'},
 {id:16,cat:'nec',diff:'Advanced',fmt:'flip',q:'What does a demand factor allow in service and feeder calculations?',a:'Reduction of calculated load because all connected loads never operate simultaneously at full capacity',explain:'Demand factors in NEC Tables 220.42, 220.44, 220.54, 220.55 allow sizing feeders for realistic maximum demand rather than total connected load.',ref:'NEC 220.42, 220.44'},
-{id:17,cat:'nec',diff:'Advanced',fmt:'mc',q:'Per NEC Table 300.5, minimum cover for PVC conduit under a residential driveway:',choices:['6 in','12 in','18 in','24 in'],correct:2,explain:'NEC Table 300.5: PVC conduit under driveways at one- and two-family dwellings = 18 in minimum cover. RMC/IMC = 6 in. Direct burial cable = 24 in.',ref:'NEC Table 300.5'},
+{id:17,cat:'nec',diff:'Advanced',fmt:'mc',q:'Per NEC Table 300.5, minimum cover for PVC conduit under a residential driveway:',choices:['6 in','12 in','18 in','24 in'],correct:2,explain:'NEC Table 300.5: PVC (nonmetallic) conduit under one- and two-family dwelling driveways = 18 in minimum cover. RMC/IMC = 12 in. Direct burial conductors = 18 in. (General locations not at driveways: RMC/IMC = 6 in, direct burial = 24 in.)',ref:'NEC Table 300.5'},
 {id:18,cat:'nec',diff:'Beginner',fmt:'tf',q:'GFCI protection is required for all 15A and 20A, 125V receptacles in bathrooms per NEC 210.8.',correct:true,explain:'NEC 210.8(A) and (B): GFCI protection required for all 15A and 20A, 125V receptacles in bathrooms of dwelling units and commercial buildings.'},
 {id:19,cat:'nec',diff:'Intermediate',fmt:'flip',q:'Working clearance in front of a 480V panelboard with grounded surface opposite (Condition 2)?',a:'3 ft 6 in (42 inches) minimum',explain:'NEC Table 110.26(A)(1): 151-600V, Condition 2 = 3.5 ft. Condition 1 (insulated walls) = 3 ft. Condition 3 (live parts on both sides) = 4 ft.',ref:'NEC 110.26(A)(1)'},
 {id:20,cat:'nec',diff:'Advanced',fmt:'mc',q:'Ampacity adjustment for 7-9 current-carrying conductors in one raceway:',choices:['50%','60%','70%','80%'],correct:2,explain:'NEC 310.15(C)(1): 4-6 conductors=80%, 7-9 conductors=70%, 10-20 conductors=50%. Accounts for mutual heating.',ref:'NEC 310.15(C)(1)'},
@@ -1564,6 +1565,12 @@ function loadCard() {
   document.getElementById('tf-container').style.display = fmt === 'tf' ? 'block' : 'none';
 
   if (fmt === 'flip') {
+    // Restart slide-in animation to match MC/TF behaviour
+    const scene = document.getElementById('flip-card');
+    scene.style.animation = 'none';
+    void scene.offsetWidth;
+    scene.style.animation = '';
+
     document.getElementById('card-format-pill').textContent = 'Flip Card';
     document.getElementById('card-inner').classList.remove('flipped');
     document.getElementById('card-q').textContent = currentCard.q;
@@ -1684,6 +1691,7 @@ function advanceCard() {
   if (session.pendingRating !== null && session.pendingRating !== undefined) {
     // MC / TF: commit the pre-determined rating then step forward
     commitRating(session.pendingRating);
+    session.pendingRating = undefined;
   }
   stepForward();
 }
@@ -1792,6 +1800,10 @@ function renderDashboard() {
 // ═══════════════════════════════════════════════════════
 
 function showScreen(id) {
+  if (id !== 'study') {
+    clearInterval(session.timerInterval);
+    session.timerInterval = null;
+  }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if (id === 'home') updateHomeUI();
