@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volt IQ — Electrical MEP Mastery</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #12161e;
+    --surface2: #1a1f2b;
+    --border: #252b38;
+    --text: #e8eaf0;
+    --text-dim: #6b7385;
+    --text-mid: #9ba3b5;
+
+    --nec: #f59e0b;
+    --load: #3b82f6;
+    --lighting: #a78bfa;
+    --lowvolt: #10b981;
+    --mep: #f43f5e;
+    --business: #fb923c;
+
+    --know: #10b981;
+    --kinda: #f59e0b;
+    --nope: #f43f5e;
+
+    --accent: #3b82f6;
+    --xp-bar: #3b82f6;
+
+    --card-w: 680px;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID BG ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; position: relative; z-index: 1; }
+  .screen.active { display: flex; }
+
+  /* ══════════════════════════════════════
+     HOME SCREEN
+  ══════════════════════════════════════ */
+  #home {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 0 20px 60px;
+  }
+
+  .home-hero {
+    width: 100%;
+    max-width: 900px;
+    padding: 48px 0 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logo-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: var(--accent);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 3px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  .home-tagline {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat-chip {
+    flex: 1;
+    min-width: 120px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-chip .label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .stat-chip .value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .stat-chip .value.accent { color: var(--accent); }
+  .stat-chip .value.green { color: var(--know); }
+  .stat-chip .value.streak { color: var(--nec); }
+
+  /* XP Bar */
+  .xp-section {
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 36px;
+  }
+
+  .xp-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .xp-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .xp-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #818cf8);
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  /* Category grid */
+  .section-title {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'DM Mono', monospace;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 14px;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 32px;
+  }
+
+  @media(max-width: 640px) {
+    .category-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .cat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cat-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .cat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--cat-color);
+  }
+
+  .cat-card:hover { border-color: var(--cat-color); }
+
+  .cat-icon { font-size: 22px; margin-bottom: 10px; }
+  .cat-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .cat-count {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .cat-mastery-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 99px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .cat-mastery-fill {
+    height: 100%;
+    background: var(--cat-color);
+    border-radius: 99px;
+    transition: width 0.5s ease;
+  }
+
+  /* Mode buttons */
+  .mode-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 900px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    flex: 1;
+    min-width: 160px;
+    padding: 16px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .btn-secondary {
+    flex: 1;
+    min-width: 160px;
+    padding: 16px 24px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+  /* ══════════════════════════════════════
+     STUDY SCREEN
+  ══════════════════════════════════════ */
+  #study {
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px 20px 80px;
+  }
+
+  .study-header {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .back-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s;
+  }
+  .back-btn:hover { border-color: var(--accent); color: var(--text); }
+
+  .progress-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .session-timer {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .session-timer.warn { color: var(--nec); }
+
+  .progress-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* Progress track */
+  .session-progress-track {
+    width: 100%;
+    max-width: 720px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .session-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* Category pill */
+  .card-meta {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .cat-pill {
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    background: color-mix(in srgb, var(--cat-color) 15%, transparent);
+    color: var(--cat-color);
+    border: 1px solid color-mix(in srgb, var(--cat-color) 30%, transparent);
+  }
+
+  .diff-pill {
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  .format-pill {
+    margin-left: auto;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  /* ── FLASHCARD ── */
+  .card-scene {
+    width: 100%;
+    max-width: 720px;
+    perspective: 1200px;
+    margin-bottom: 24px;
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.34,1.2,0.64,1);
+    cursor: pointer;
+  }
+
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 40px 44px;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+  }
+
+  .card-face.back { transform: rotateY(180deg); background: var(--surface2); }
+
+  .card-face-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  .card-question {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--text);
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .card-answer {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .card-answer .answer-main {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--know);
+    margin-bottom: 12px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .card-answer .answer-explain {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  .card-answer .nec-ref {
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: color-mix(in srgb, var(--nec) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--nec) 25%, transparent);
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--nec);
+  }
+
+  .flip-hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.8s 0.4s forwards;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* ── MULTIPLE CHOICE ── */
+  .mc-options {
+    width: 100%;
+    max-width: 720px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  @media(max-width: 520px) { .mc-options { grid-template-columns: 1fr; } }
+
+  .mc-btn {
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s, background 0.2s;
+    line-height: 1.4;
+  }
+
+  .mc-btn:hover:not(:disabled) { border-color: var(--accent); }
+  .mc-btn.correct { border-color: var(--know); background: color-mix(in srgb, var(--know) 12%, transparent); color: var(--know); }
+  .mc-btn.wrong { border-color: var(--nope); background: color-mix(in srgb, var(--nope) 12%, transparent); color: var(--nope); }
+  .mc-btn:disabled { cursor: default; }
+
+  /* ── TRUE/FALSE ── */
+  .tf-options {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .tf-btn {
+    flex: 1;
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    text-align: center;
+  }
+
+  .tf-btn:hover:not(:disabled) { border-color: var(--accent); }
+  .tf-btn.correct { border-color: var(--know); background: color-mix(in srgb, var(--know) 15%, transparent); color: var(--know); }
+  .tf-btn.wrong { border-color: var(--nope); background: color-mix(in srgb, var(--nope) 15%, transparent); color: var(--nope); }
+  .tf-btn:disabled { cursor: default; }
+
+  /* ── EXPLANATION PANEL ── */
+  .explain-panel {
+    width: 100%;
+    max-width: 720px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    display: none;
+    animation: fadeSlideIn 0.3s ease;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .explain-panel.visible { display: block; }
+
+  .explain-result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .explain-result-badge.correct-badge {
+    background: color-mix(in srgb, var(--know) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--know) 40%, transparent);
+    color: var(--know);
+  }
+
+  .explain-result-badge.wrong-badge {
+    background: color-mix(in srgb, var(--nope) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--nope) 40%, transparent);
+    color: var(--nope);
+  }
+
+  .explain-answer-line {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--know);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 10px;
+  }
+
+  .explain-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    margin-bottom: 0;
+  }
+
+  .explain-ref {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: color-mix(in srgb, var(--nec) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--nec) 25%, transparent);
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--nec);
+  }
+
+  /* ── NEXT BUTTON ── */
+  .next-btn-row {
+    width: 100%;
+    max-width: 720px;
+    display: none;
+    margin-bottom: 10px;
+  }
+
+  .next-btn-row.visible { display: flex; }
+
+  .btn-next {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-next:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* ── RATING BUTTONS ── */
+  .rating-row {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .rating-btn {
+    flex: 1;
+    padding: 14px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--text);
+  }
+
+  .rating-btn:hover { transform: translateY(-2px); }
+  .rating-btn.know { border-color: var(--know); }
+  .rating-btn.know:hover { background: color-mix(in srgb, var(--know) 15%, transparent); color: var(--know); }
+  .rating-btn.kinda { border-color: var(--kinda); }
+  .rating-btn.kinda:hover { background: color-mix(in srgb, var(--kinda) 15%, transparent); color: var(--kinda); }
+  .rating-btn.nope { border-color: var(--nope); }
+  .rating-btn.nope:hover { background: color-mix(in srgb, var(--nope) 15%, transparent); color: var(--nope); }
+
+  .rating-btn .emoji { font-size: 18px; }
+  .rating-btn .sub { font-size: 10px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+
+  /* ── SESSION COMPLETE ── */
+  #complete {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .complete-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 56px;
+    max-width: 520px;
+    width: 100%;
+  }
+
+  .complete-icon { font-size: 56px; margin-bottom: 16px; }
+  .complete-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .complete-sub { color: var(--text-dim); font-size: 14px; margin-bottom: 32px; }
+
+  .complete-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .c-stat {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 12px;
+  }
+
+  .c-stat .cv { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--accent); }
+  .c-stat .cl { font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── XP TOAST ── */
+  .xp-toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    z-index: 999;
+    animation: toastIn 0.3s ease, toastOut 0.3s 1.8s ease forwards;
+    pointer-events: none;
+  }
+
+  @keyframes toastIn { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
+  @keyframes toastOut { to { opacity:0; transform: translateY(-10px); } }
+
+  /* ── CARD SLIDE ── */
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .card-scene { animation: slideIn 0.3s ease; }
+
+  /* ── DASHBOARD SCREEN ── */
+  #dashboard {
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px 20px 60px;
+  }
+
+  .dash-header {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+
+  .dash-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+  }
+
+  .mastery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 24px;
+  }
+
+  @media(max-width: 560px) { .mastery-grid { grid-template-columns: 1fr; } }
+
+  .mastery-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+  }
+
+  .mastery-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .mastery-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--cat-color);
+    flex-shrink: 0;
+  }
+
+  .mastery-card-name { font-size: 14px; font-weight: 600; }
+  .mastery-pct { margin-left: auto; font-family: 'DM Mono', monospace; font-size: 13px; color: var(--cat-color); }
+
+  .mastery-breakdown {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .mbd { flex: 1; text-align: center; }
+  .mbd .n { font-family: 'Bebas Neue', sans-serif; font-size: 22px; }
+  .mbd .l { font-size: 10px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+  .mbd .n.green { color: var(--know); }
+  .mbd .n.yellow { color: var(--kinda); }
+  .mbd .n.red { color: var(--nope); }
+
+  .mastery-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    display: flex;
+    gap: 2px;
+  }
+
+  .mastery-seg {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.5s ease;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HOME ══════════ -->
+<div id="home" class="screen active">
+  <div class="home-hero">
+    <div class="logo-badge">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">VOLT<span>IQ</span></div>
+    </div>
+    <div class="home-tagline">Electrical MEP Mastery · NEC · Load Calc · Systems</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-chip">
+      <div class="label">Level</div>
+      <div class="value accent" id="stat-level">1</div>
+    </div>
+    <div class="stat-chip">
+      <div class="label">Total XP</div>
+      <div class="value" id="stat-xp">0</div>
+    </div>
+    <div class="stat-chip">
+      <div class="label">Cards Reviewed</div>
+      <div class="value" id="stat-reviewed">0</div>
+    </div>
+    <div class="stat-chip">
+      <div class="label">Streak</div>
+      <div class="value streak" id="stat-streak">0🔥</div>
+    </div>
+    <div class="stat-chip">
+      <div class="label">Mastered</div>
+      <div class="value green" id="stat-mastered">0</div>
+    </div>
+  </div>
+
+  <div class="xp-section">
+    <div class="xp-header">
+      <span class="xp-label" id="xp-level-label">Level 1 — Junior Engineer</span>
+      <span class="xp-label" id="xp-to-next">0 / 200 XP</span>
+    </div>
+    <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="section-title">Study by Category</div>
+  <div class="category-grid" id="cat-grid"></div>
+
+  <div class="section-title" style="margin-top:8px">Quick Start</div>
+  <div class="mode-row">
+    <button class="btn-primary" onclick="startSession('all')">⚡ Quick Review (All)</button>
+    <button class="btn-secondary" onclick="startSession('due')">📅 Due for Review</button>
+    <button class="btn-secondary" onclick="showScreen('dashboard')">📊 Dashboard</button>
+  </div>
+</div>
+
+<!-- ══════════ STUDY ══════════ -->
+<div id="study" class="screen">
+  <div class="study-header">
+    <button class="back-btn" onclick="showScreen('home')">← Home</button>
+    <div class="progress-info">
+      <div class="session-timer" id="session-timer">10:00</div>
+      <div class="progress-counter" id="progress-counter">0 / 0</div>
+    </div>
+  </div>
+
+  <div class="session-progress-track">
+    <div class="session-progress-fill" id="session-fill" style="width:0%"></div>
+  </div>
+
+  <div class="card-meta">
+    <div class="cat-pill" id="card-cat-pill">NEC Code</div>
+    <div class="diff-pill" id="card-diff-pill">Beginner</div>
+    <div class="format-pill" id="card-format-pill">Flip Card</div>
+  </div>
+
+  <!-- FLIP CARD -->
+  <div class="card-scene" id="flip-card" onclick="flipCard()">
+    <div class="card-inner" id="card-inner">
+      <div class="card-face front">
+        <div class="card-face-label">Question</div>
+        <div class="card-question" id="card-q">Loading...</div>
+        <div class="flip-hint">Tap to reveal answer</div>
+      </div>
+      <div class="card-face back">
+        <div class="card-face-label">Answer</div>
+        <div class="card-answer" id="card-a"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MULTIPLE CHOICE -->
+  <div id="mc-container" style="display:none; width:100%; max-width:720px;">
+    <div class="card-scene" id="mc-card">
+      <div class="card-face" style="position:relative; min-height:200px;">
+        <div class="card-face-label">Question</div>
+        <div class="card-question" id="mc-q" style="font-size:20px;"></div>
+      </div>
+    </div>
+    <div class="mc-options" id="mc-options"></div>
+  </div>
+
+  <!-- TRUE/FALSE -->
+  <div id="tf-container" style="display:none; width:100%; max-width:720px;">
+    <div class="card-scene" id="tf-card">
+      <div class="card-face" style="position:relative; min-height:200px;">
+        <div class="card-face-label">True or False?</div>
+        <div class="card-question" id="tf-q" style="font-size:20px;"></div>
+      </div>
+    </div>
+    <div class="tf-options">
+      <button class="tf-btn" id="tf-true" onclick="answerTF(true)">✓ True</button>
+      <button class="tf-btn" id="tf-false" onclick="answerTF(false)">✗ False</button>
+    </div>
+  </div>
+
+  <!-- EXPLANATION PANEL (shown after MC/TF answer) -->
+  <div class="explain-panel" id="explain-panel">
+    <div class="explain-result-badge" id="explain-badge"></div>
+    <div class="explain-answer-line" id="explain-answer-line"></div>
+    <div class="explain-text" id="explain-text"></div>
+    <div class="explain-ref" id="explain-ref" style="display:none;"></div>
+  </div>
+
+  <!-- NEXT BUTTON (shown after MC/TF answer) -->
+  <div class="next-btn-row" id="next-btn-row">
+    <button class="btn-next" onclick="advanceCard()">Next Question →</button>
+  </div>
+
+  <!-- RATING (shown after flip reveal) -->
+  <div class="rating-row" id="rating-row" style="display:none;">
+    <button class="rating-btn know" onclick="rateCard(2)">
+      <span class="emoji">✅</span>
+      <span>Got It</span>
+      <span class="sub">Long interval</span>
+    </button>
+    <button class="rating-btn kinda" onclick="rateCard(1)">
+      <span class="emoji">🤔</span>
+      <span>Kinda Know</span>
+      <span class="sub">Medium interval</span>
+    </button>
+    <button class="rating-btn nope" onclick="rateCard(0)">
+      <span class="emoji">❌</span>
+      <span>No Idea</span>
+      <span class="sub">Review soon</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ COMPLETE ══════════ -->
+<div id="complete" class="screen">
+  <div class="complete-card">
+    <div class="complete-icon" id="complete-icon">🎯</div>
+    <div class="complete-title" id="complete-title">SESSION DONE</div>
+    <div class="complete-sub" id="complete-sub">Great work. Keep building those neural pathways.</div>
+    <div class="complete-stats">
+      <div class="c-stat"><div class="cv" id="cs-correct">0</div><div class="cl">Correct</div></div>
+      <div class="c-stat"><div class="cv" id="cs-xp">0</div><div class="cl">XP Earned</div></div>
+      <div class="c-stat"><div class="cv" id="cs-cards">0</div><div class="cl">Cards Done</div></div>
+    </div>
+    <div class="mode-row" style="flex-direction:column; gap:10px;">
+      <button class="btn-primary" onclick="startSession('all')">⚡ Another Round</button>
+      <button class="btn-secondary" onclick="showScreen('home')">← Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="dashboard" class="screen">
+  <div class="dash-header" style="max-width:900px; width:100%;">
+    <div class="dash-title">📊 Progress Dashboard</div>
+    <button class="back-btn" onclick="showScreen('home')">← Home</button>
+  </div>
+  <div class="mastery-grid" id="mastery-grid"></div>
+  <div style="width:100%;max-width:900px;">
+    <button class="btn-secondary" onclick="if(confirm('Reset ALL progress?')) { resetProgress(); showScreen(\'home\'); }">🗑 Reset Progress</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════
+
+const CATEGORIES = [
+  { id:'nec',      name:'NEC Code',          icon:'📋', color:'#f59e0b' },
+  { id:'load',     name:'Load Calculations', icon:'🔢', color:'#3b82f6' },
+  { id:'lighting', name:'Lighting & Power',  icon:'💡', color:'#a78bfa' },
+  { id:'lowvolt',  name:'Low Voltage',       icon:'📡', color:'#10b981' },
+  { id:'mep',      name:'MEP Coordination',  icon:'📐', color:'#f43f5e' },
+  { id:'business', name:'Business & PM',     icon:'💼', color:'#fb923c' },
+];
+
+const CARDS=[
+{id:1,cat:'nec',diff:'Beginner',fmt:'flip',q:'What does NEC stand for?',a:'National Electrical Code (NFPA 70)',explain:'Published by NFPA on a 3-year cycle. Benchmark for safe electrical design, installation, and inspection in the US. Purpose per 90.1: practical safeguarding of persons and property from electrical hazards.',ref:'NEC Article 90'},
+{id:2,cat:'nec',diff:'Beginner',fmt:'tf',q:'The NEC is a mandatory federal law all states must adopt exactly as written.',correct:false,explain:'The NEC is a model code. States adopt it by reference, often with local amendments. It is NOT federal law.'},
+{id:3,cat:'nec',diff:'Beginner',fmt:'mc',q:'NEC article covering general requirements for wiring methods and materials:',choices:['Article 110','Article 200','Article 300','Article 400'],correct:2,explain:'Article 300 is the umbrella article for all wiring methods. Specific raceway articles (EMT=358, RMC=344, MC=330) supplement it.'},
+{id:4,cat:'nec',diff:'Beginner',fmt:'flip',q:'Purpose of NEC Article 90?',a:'Introduction - establishes scope, purpose (safety), and application of the Code. The NEC is NOT a design specification.',explain:'NEC 90.1: The purpose is the practical safeguarding of persons and property from hazards arising from the use of electricity.',ref:'NEC 90.1'},
+{id:5,cat:'nec',diff:'Beginner',fmt:'mc',q:'What NEC article covers branch circuits?',choices:['Article 200','Article 210','Article 215','Article 220'],correct:1,explain:'Article 210 covers branch circuits - required receptacles, GFCI/AFCI protection, circuit ratings, and voltage limitations.'},
+{id:6,cat:'nec',diff:'Intermediate',fmt:'flip',q:'Maximum continuous load on a standard 20A, 120V branch circuit breaker?',a:'1,920 watts (80% of 20A x 120V)',explain:'NEC 210.19(A)(1): Continuous loads (3+ hours) must not exceed 80% of OCPD rating unless listed for 100% continuous. 20 x 120 x 0.80 = 1,920W.',ref:'NEC 210.19(A)(1)'},
+{id:7,cat:'nec',diff:'Intermediate',fmt:'tf',q:'NEC Article 220 covers feeder and service load calculations.',correct:true,explain:'Article 220 provides mandatory calculation methods for branch circuit, feeder, and service loads including unit loads by occupancy type and demand factors.'},
+{id:8,cat:'nec',diff:'Intermediate',fmt:'mc',q:'Minimum headroom in front of electrical equipment per NEC 110.26(A)(3):',choices:['5 ft 6 in','6 ft','6 ft 6 in','7 ft'],correct:2,explain:'NEC 110.26(A)(3): Minimum headroom shall be 6 ft 6 in (1.98 m) for equipment rated 600V or less.',ref:'NEC 110.26(A)(3)'},
+{id:9,cat:'nec',diff:'Intermediate',fmt:'flip',q:'What does NEC Article 250 cover?',a:'Grounding and Bonding - all requirements for grounding electrical systems and bonding metallic components',explain:'Article 250 covers system grounding, equipment grounding, grounding electrode systems, and bonding of piping systems.',ref:'NEC Article 250'},
+{id:10,cat:'nec',diff:'Intermediate',fmt:'mc',q:'Per NEC 210.52, maximum spacing between receptacles along a dwelling unit wall:',choices:['6 ft','10 ft','12 ft','16 ft'],correct:2,explain:'NEC 210.52(A)(1): No point along the floor line shall be more than 6 ft from an outlet - resulting in maximum 12 ft spacing between adjacent receptacles.'},
+{id:11,cat:'nec',diff:'Advanced',fmt:'flip',q:'NEC table giving allowable ampacity for copper conductors at 75C in a raceway with 3 or fewer CCCs?',a:'NEC Table 310.16',explain:'Table 310.16 lists ampacity for insulated conductors 0-2000V at 60C, 75C, and 90C ratings with not more than 3 current-carrying conductors.',ref:'NEC Table 310.16'},
+{id:12,cat:'nec',diff:'Advanced',fmt:'tf',q:'Aluminum conductors are prohibited in commercial buildings by the NEC.',correct:false,explain:'Aluminum conductors are permitted. Special Al-rated connectors must be used. Common for large feeders and service conductors due to lower cost.'},
+{id:13,cat:'nec',diff:'Beginner',fmt:'mc',q:'NEC article covering service conductors and service equipment:',choices:['Article 215','Article 220','Article 225','Article 230'],correct:3,explain:'Article 230 covers services - conductors and equipment from the utility connection through the service disconnecting means.'},
+{id:14,cat:'nec',diff:'Intermediate',fmt:'flip',q:'What does NEC Article 700 cover?',a:'Emergency Systems - power for life-safety illumination and equipment when normal supply fails',explain:'Article 700 covers emergency systems required for life safety - exit signs, egress lighting, fire pump feeders. Must transfer within 10 seconds.',ref:'NEC Article 700'},
+{id:15,cat:'nec',diff:'Intermediate',fmt:'mc',q:'NEC article covering fire alarm wiring and equipment:',choices:['Article 700','Article 725','Article 760','Article 800'],correct:2,explain:'Article 760 covers fire alarm systems - both non-power-limited (NPLFA) and power-limited (PLFA) circuits. References NFPA 72 for system design.'},
+{id:16,cat:'nec',diff:'Advanced',fmt:'flip',q:'What does a demand factor allow in service and feeder calculations?',a:'Reduction of calculated load because all connected loads never operate simultaneously at full capacity',explain:'Demand factors in NEC Tables 220.42, 220.44, 220.54, 220.55 allow sizing feeders for realistic maximum demand rather than total connected load.',ref:'NEC 220.42, 220.44'},
+{id:17,cat:'nec',diff:'Advanced',fmt:'mc',q:'Per NEC Table 300.5, minimum cover for PVC conduit under a residential driveway:',choices:['6 in','12 in','18 in','24 in'],correct:2,explain:'NEC Table 300.5: PVC conduit under driveways at one- and two-family dwellings = 18 in minimum cover. RMC/IMC = 6 in. Direct burial cable = 24 in.',ref:'NEC Table 300.5'},
+{id:18,cat:'nec',diff:'Beginner',fmt:'tf',q:'GFCI protection is required for all 15A and 20A, 125V receptacles in bathrooms per NEC 210.8.',correct:true,explain:'NEC 210.8(A) and (B): GFCI protection required for all 15A and 20A, 125V receptacles in bathrooms of dwelling units and commercial buildings.'},
+{id:19,cat:'nec',diff:'Intermediate',fmt:'flip',q:'Working clearance in front of a 480V panelboard with grounded surface opposite (Condition 2)?',a:'3 ft 6 in (42 inches) minimum',explain:'NEC Table 110.26(A)(1): 151-600V, Condition 2 = 3.5 ft. Condition 1 (insulated walls) = 3 ft. Condition 3 (live parts on both sides) = 4 ft.',ref:'NEC 110.26(A)(1)'},
+{id:20,cat:'nec',diff:'Advanced',fmt:'mc',q:'Ampacity adjustment for 7-9 current-carrying conductors in one raceway:',choices:['50%','60%','70%','80%'],correct:2,explain:'NEC 310.15(C)(1): 4-6 conductors=80%, 7-9 conductors=70%, 10-20 conductors=50%. Accounts for mutual heating.',ref:'NEC 310.15(C)(1)'},
+{id:21,cat:'nec',diff:'Intermediate',fmt:'flip',q:'What NEC article covers motors, motor circuits, and motor controllers?',a:'Article 430',explain:'Article 430 covers motor branch circuit conductors (430.22), overload protection (430.32), short-circuit protection (Table 430.52), and disconnecting means (430.102).',ref:'NEC Article 430'},
+{id:22,cat:'nec',diff:'Advanced',fmt:'mc',q:'Per NEC 230.79(C), minimum service disconnect rating for a single-family dwelling:',choices:['60A','100A','150A','200A'],correct:1,explain:'NEC 230.79(C): For a single-family dwelling, the service disconnecting means shall have a rating of not less than 100 amperes, 3-wire.'},
+{id:23,cat:'nec',diff:'Beginner',fmt:'flip',q:'What does OCPD stand for?',a:'Overcurrent Protection Device - a fuse or circuit breaker protecting conductors from excessive current',explain:'OCPDs are required at the beginning of every ungrounded conductor (with exceptions). Must interrupt available fault current. Sized per NEC Article 240.',ref:'NEC Article 240'},
+{id:24,cat:'nec',diff:'Intermediate',fmt:'tf',q:'A single 30A receptacle may be installed on a 20A branch circuit.',correct:false,explain:'NEC 210.21(B)(1): A single receptacle on an individual branch circuit shall have an ampere rating not less than the branch circuit rating. 30A receptacle requires 30A circuit.'},
+{id:25,cat:'nec',diff:'Advanced',fmt:'flip',q:'Minimum ampacity for feeder conductors per NEC 215.2?',a:'Not less than load per Article 220; not less than 125% of continuous load plus 100% of non-continuous load',explain:'NEC 215.2(A)(1): For continuous loads size at 125%; for non-continuous size at 100%.',ref:'NEC 215.2(A)(1)'},
+{id:26,cat:'nec',diff:'Beginner',fmt:'mc',q:'NEC article covering electrical metallic tubing (EMT):',choices:['Article 300','Article 344','Article 350','Article 358'],correct:3,explain:'Article 358 covers EMT. Article 344=RMC, Article 348=FMC, Article 350=LFMC.'},
+{id:27,cat:'nec',diff:'Advanced',fmt:'flip',q:'Difference between grounding and bonding?',a:'Grounding = intentional connection to earth establishing reference potential. Bonding = connecting metallic parts together ensuring electrical continuity.',explain:'Grounding limits system voltage from lightning/surges. Bonding ensures all conductive parts are at the same potential so fault current can operate OCPDs.',ref:'NEC Article 100, 250'},
+{id:28,cat:'nec',diff:'Intermediate',fmt:'mc',q:'NEC article covering healthcare facilities including patient care spaces:',choices:['Article 516','Article 517','Article 518','Article 520'],correct:1,explain:'Article 517 covers healthcare facilities - general care areas, critical care areas, operating rooms, isolated power systems, and the Essential Electrical System (EES).'},
+{id:29,cat:'nec',diff:'Beginner',fmt:'flip',q:'What does AFCI stand for and where is it required in the 2023 NEC?',a:'Arc-Fault Circuit Interrupter. Required on all 120V, 15A and 20A branch circuits in ALL rooms of dwelling units per NEC 210.12.',explain:'AFCIs detect dangerous arc faults from damaged wire insulation that can cause fires without tripping standard breakers.',ref:'NEC 210.12'},
+{id:30,cat:'nec',diff:'Beginner',fmt:'mc',q:'NEC article covering conductors for general wiring including insulation types and ampacity:',choices:['Article 240','Article 300','Article 310','Article 320'],correct:2,explain:'Article 310 covers conductors for general wiring - conductor types (THHN, THWN, XHHW), temperature ratings, and ampacity tables.'},
+{id:31,cat:'nec',diff:'Intermediate',fmt:'tf',q:'The neutral of a 3-phase, 4-wire wye system is always a current-carrying conductor for adjustment factor purposes.',correct:false,explain:'NEC 310.15(E): The neutral carrying only unbalanced current is NOT a current-carrying conductor UNLESS it carries harmonic currents exceeding 50% of phase current.'},
+{id:32,cat:'nec',diff:'Intermediate',fmt:'flip',q:'What does NEC Article 404 cover?',a:'Switches - installation requirements, ratings, accessibility, and use of circuit breakers as switches',explain:'Article 404 covers snap switches, dimmers, and circuit breakers used as switches. Circuit breakers used as switches must be "SWD" rated.',ref:'NEC Article 404'},
+{id:33,cat:'nec',diff:'Intermediate',fmt:'mc',q:'Maximum number of service disconnects for a single service per NEC 230.71:',choices:['2','4','6','8'],correct:2,explain:'NEC 230.71(A): The service disconnecting means shall consist of not more than six switches or circuit breakers. This is the "six-disconnect" rule.'},
+{id:34,cat:'nec',diff:'Advanced',fmt:'tf',q:'THHN conductors rated 90C can be loaded to their full 90C ampacity at 75C-rated equipment terminals.',correct:false,explain:'NEC 110.14(C)(1): Conductor ampacity cannot exceed the 75C column when terminated at 75C-rated equipment. THHN may use 90C column for derating only - final ampacity capped at terminal rating.'},
+{id:35,cat:'nec',diff:'Advanced',fmt:'flip',q:'Maximum conduit fill for 3 or more conductors per NEC Chapter 9, Table 1?',a:'40% of the conduit interior cross-sectional area',explain:'NEC Chapter 9 Table 1: 1 conductor=53%, 2 conductors=31%, 3+ conductors=40%. Conductor areas from Table 5, conduit areas from Table 4.',ref:'NEC Chapter 9, Table 1'},
+{id:36,cat:'nec',diff:'Intermediate',fmt:'mc',q:'What NEC article covers panelboards?',choices:['Article 404','Article 408','Article 424','Article 430'],correct:1,explain:'Article 408 covers switchboards, switchgear, and panelboards. Key requirements: circuit directory (408.4), panelboard overcurrent protection (408.36), and wire bending space.'},
+{id:37,cat:'nec',diff:'Beginner',fmt:'flip',q:'What does "listed" mean for electrical equipment per NEC?',a:'Equipment evaluated by a Nationally Recognized Testing Laboratory (NRTL like UL, CSA, ETL) and found to meet applicable product safety standards',explain:'NEC 110.3(B): Listed equipment shall be installed per instructions in the listing or labeling. Common NRTLs: UL, CSA, ETL (Intertek).',ref:'NEC 110.2, 110.3'},
+{id:38,cat:'nec',diff:'Advanced',fmt:'mc',q:'Per NEC Table 250.122, minimum copper EGC for a 100A OCPD:',choices:['14 AWG','12 AWG','8 AWG','6 AWG'],correct:2,explain:'NEC Table 250.122: 15A=14AWG, 20A=12AWG, 60A=10AWG, 100A=8AWG, 200A=6AWG.',ref:'NEC Table 250.122'},
+{id:39,cat:'nec',diff:'Intermediate',fmt:'tf',q:'NEC Article 501 covers Class I hazardous locations - areas with flammable gases and vapors.',correct:true,explain:'NEC Articles 500-516 cover hazardous locations. Class I=flammable gases/vapors (Article 501). Class II=combustible dust (Article 502). Class III=ignitable fibers (Article 503).'},
+{id:40,cat:'nec',diff:'Advanced',fmt:'flip',q:'What does NEC Article 695 cover?',a:'Fire Pumps - requires dedicated, reliable power supply; fire pump disconnect must not be in the normal firefighter access path',explain:'Fire pumps need a reliable power supply per Article 695 - often a dedicated service ahead of the main disconnect. Generator backup often required by NFPA 20.',ref:'NEC Article 695'},
+{id:41,cat:'nec',diff:'Beginner',fmt:'mc',q:'Minimum wire size for a 15A, 120V branch circuit using copper THHN:',choices:['16 AWG','14 AWG','12 AWG','10 AWG'],correct:1,explain:'NEC 240.4(D)(3): 14 AWG copper minimum for 15A branch circuits. 12 AWG minimum for 20A circuits.'},
+{id:42,cat:'nec',diff:'Intermediate',fmt:'flip',q:'What is a "separately derived system" per NEC Article 100?',a:'A premises wiring system whose power derives from a source with NO direct electrical connection (including solid neutral) to supply conductors of another system',explain:'Examples: isolation transformers, generators, UPS with output transformer. Require their own system grounding point and grounding electrode per NEC 250.30.',ref:'NEC Article 100, 250.30'},
+{id:43,cat:'nec',diff:'Advanced',fmt:'mc',q:'NEC article covering Legally Required Standby Systems:',choices:['Article 700','Article 701','Article 702','Article 708'],correct:1,explain:'Article 701 covers Legally Required Standby Systems - required by governmental bodies for safety but not life safety. Selective coordination required per 701.27.'},
+{id:44,cat:'nec',diff:'Intermediate',fmt:'tf',q:'A panelboard must always have a main breaker if it contains more than 6 circuit breakers.',correct:false,explain:'NEC 408.36: The six-disconnect rule applies to services, not panelboards. A panelboard does not require a main breaker based on circuit count.'},
+{id:45,cat:'nec',diff:'Advanced',fmt:'flip',q:'NEC dedicated equipment space requirement?',a:'NEC 110.26(E): Space equal to panel width and depth, from floor to 6 ft above equipment, must be kept free of all foreign systems',explain:'This dedicated space is separate from working clearance. No plumbing, HVAC ducts, or foreign equipment may occupy this zone.',ref:'NEC 110.26(E)'},
+{id:46,cat:'nec',diff:'Beginner',fmt:'mc',q:'NEC article covering the grounding electrode system:',choices:['Article 100','Article 200','Article 250','Article 300'],correct:2,explain:'NEC Article 250, Part III (250.50-250.70) covers the grounding electrode system. All available electrodes must be bonded.'},
+{id:47,cat:'nec',diff:'Intermediate',fmt:'flip',q:'Maximum branch circuit voltage for screw-shell lampholders in a dwelling unit?',a:'120 volts between conductors',explain:'NEC 210.6(A): Branch circuits supplying luminaires with screw-shell lampholders in dwelling units shall not exceed 120V between conductors.',ref:'NEC 210.6(A)'},
+{id:48,cat:'nec',diff:'Advanced',fmt:'mc',q:'Minimum burial depth for direct-buried 120V conductors (no conduit) in a general location per NEC Table 300.5:',choices:['6 in','12 in','18 in','24 in'],correct:3,explain:'NEC Table 300.5: Direct burial conductors (no conduit) in general locations = 24 in minimum. In RMC/IMC = 6 in. In rigid PVC = 18 in.',ref:'NEC Table 300.5'},
+{id:49,cat:'nec',diff:'Advanced',fmt:'tf',q:'The main bonding jumper connects the neutral conductor to the equipment grounding conductor at the service disconnecting means.',correct:true,explain:'NEC 250.28: The MBJ is the connection at the service between the grounded circuit conductor (neutral) and the equipment grounding conductor. Only one MBJ per service.'},
+{id:50,cat:'nec',diff:'Beginner',fmt:'flip',q:'What does EMT stand for?',a:'Electrical Metallic Tubing - thin-wall steel conduit, the most common raceway in commercial construction',explain:'EMT (Article 358) is lightweight, cannot be threaded, uses set-screw or compression fittings. Permitted in dry and damp locations.',ref:'NEC Article 358'},
+{id:51,cat:'nec',diff:'Intermediate',fmt:'tf',q:'PVC conduit Schedule 40 is permitted for use in concrete encasement underground.',correct:true,explain:'NEC 352.10(B): Schedule 40 PVC conduit is listed and permitted for direct burial and concrete encasement. Widely used for underground service laterals.'},
+{id:52,cat:'nec',diff:'Advanced',fmt:'flip',q:'NEC requirement for GFPE on 480Y/277V services?',a:'Required on solidly grounded wye services rated 1,000A or more, exceeding 150V to ground but not exceeding 600V phase-to-phase',explain:'NEC 230.95: GFPE required for 480Y/277V services rated 1,000A or more. Detects low-level ground faults (5-1,200A) not tripping standard OCPDs.',ref:'NEC 230.95'},
+{id:53,cat:'nec',diff:'Intermediate',fmt:'mc',q:'NEC article covering transformer installation:',choices:['Article 408','Article 420','Article 450','Article 460'],correct:2,explain:'Article 450 covers transformers and transformer vaults - overcurrent protection (Table 450.3), ventilation, clearances, and vault construction.'},
+{id:54,cat:'nec',diff:'Advanced',fmt:'tf',q:'A circuit breaker rated "SWD" may be used as a switch for repeated daily switching of fluorescent lighting circuits.',correct:true,explain:'NEC 240.81 and 404.11: Circuit breakers used as switches for fluorescent luminaires must be listed and marked "SWD" (Switching Duty). Standard breakers fail prematurely with repeated switching.'},
+{id:55,cat:'nec',diff:'Advanced',fmt:'flip',q:'High-leg identification requirement for 4-wire delta systems?',a:'The high leg (phase B, approximately 208V to ground on a 240V system) must be identified with ORANGE color at all termination and connection points',explain:'NEC 230.56, 408.3(E): Orange marking required for the high leg everywhere a connection is made. The 208V high leg destroys 120V equipment if connected incorrectly.',ref:'NEC 230.56, 408.3(E)'},
+{id:56,cat:'nec',diff:'Beginner',fmt:'mc',q:'Color identifying the equipment grounding conductor (EGC) per NEC 250.119:',choices:['White or gray','Green or bare copper','Black','Orange'],correct:1,explain:'NEC 250.119: EGCs must be green insulation, green with yellow stripe, or bare copper. White/gray = neutral. Black/red/blue = ungrounded (hot). Green is reserved exclusively for EGCs.'},
+{id:57,cat:'nec',diff:'Intermediate',fmt:'flip',q:'What is a GFCI and how does it protect against electrical shock?',a:'Ground Fault Circuit Interrupter - detects current imbalance of 5mA or more between hot and neutral and opens the circuit in under 1/40 second',explain:'GFCI continuously compares hot and neutral currents. A 4-6 mA difference indicates current escaping to ground - possibly through a person. Trips faster than any standard breaker.',ref:'NEC 210.8'},
+{id:58,cat:'nec',diff:'Advanced',fmt:'mc',q:'NFPA 70E governs:',choices:['New electrical construction requirements','Electrical safety in the workplace: arc flash, PPE, and energized work','NEC amendments','Grounding electrode requirements'],correct:1,explain:'NFPA 70E covers electrical safety in the workplace - separate from NEC (NFPA 70). Mandates arc flash hazard analysis, PPE selection, energized electrical work permits, and LOTO. Enforced by OSHA.'},
+{id:59,cat:'nec',diff:'Intermediate',fmt:'tf',q:'All junction boxes must be accessible without removing any part of the building structure or finish.',correct:true,explain:'NEC 314.29: Boxes and conduit bodies shall be installed so that wiring is accessible without removing any part of the building structure or finish.'},
+{id:60,cat:'nec',diff:'Advanced',fmt:'flip',q:'NEC definition of a "continuous load"?',a:'A load where the maximum current is expected to continue for 3 hours or more',explain:'NEC Article 100 definition. Continuous loads require 125% sizing of conductors and OCPDs. Examples: commercial lighting, electric heating. Non-continuous loads use 100%.',ref:'NEC Article 100'},
+{id:61,cat:'nec',diff:'Intermediate',fmt:'mc',q:'NEC article covering electrical installations in swimming pools, spas, and fountains:',choices:['Article 515','Article 520','Article 680','Article 690'],correct:2,explain:'Article 680 covers swimming pools, hot tubs, spas, and fountains. Requirements include equipotential bonding (680.26), GFCI protection, and minimum distances for luminaires from water.'},
+{id:62,cat:'nec',diff:'Beginner',fmt:'flip',q:'NEC GFCI requirement for receptacles within 6 feet of a kitchen sink in a dwelling?',a:'GFCI protection required for all 15A and 20A, 125V receptacles within 6 ft of the outside edge of a dwelling kitchen sink',explain:'NEC 210.8(A)(6): Measured from the outside edge of the sink. Applies to all kitchen receptacles serving countertop surfaces.',ref:'NEC 210.8(A)(6)'},
+{id:63,cat:'nec',diff:'Advanced',fmt:'mc',q:'NEC article covering Optional Standby Systems:',choices:['Article 700','Article 701','Article 702','Article 703'],correct:2,explain:'Article 702 covers Optional Standby Systems - not legally required but voluntarily installed for process protection, data centers, or convenience. Less stringent than Articles 700 or 701.'},
+{id:64,cat:'nec',diff:'Intermediate',fmt:'tf',q:'The 2023 NEC requires Surge Protective Devices (SPDs) at all new dwelling unit services.',correct:true,explain:'2023 NEC 230.67: A listed SPD shall be installed at the service of all new dwelling units. Added in 2023 to protect home electronics and appliances from lightning and utility surges.',ref:'NEC 230.67 (2023)'},
+{id:65,cat:'nec',diff:'Advanced',fmt:'flip',q:'Overcurrent protection for transformer primaries rated 600V or less per NEC 450.3(B)?',a:'Primary OCPD shall not exceed 125% of rated primary current (or next standard size up)',explain:'NEC Table 450.3(B): For primary current at or above 9A, primary protection must not exceed 125% of rated primary current.',ref:'NEC 450.3(B)'},
+
+{id:200,cat:'load',diff:'Beginner',fmt:'flip',q:'General lighting unit load for office buildings per NEC Table 220.12?',a:'3.5 VA per square foot',explain:'NEC Table 220.12: Offices=3.5 VA/sq ft. Dwellings=3 VA/sq ft. Hospitals=2 VA/sq ft. Storage warehouses=0.25 VA/sq ft. Retail=3 VA/sq ft. Used for feeder and service load calculations before demand factors.',ref:'NEC Table 220.12'},
+{id:201,cat:'load',diff:'Beginner',fmt:'mc',q:'Real (active) power formula for a single-phase AC circuit:',choices:['P = V x I','P = V x I x PF','P = V x I x sqrt(3)','P = I^2 x Z'],correct:1,explain:'Single-phase real power: P (watts) = V x I x PF. Apparent power: S (VA) = V x I. Reactive power: Q (VAR) = V x I x sin(theta).'},
+{id:202,cat:'load',diff:'Beginner',fmt:'tf',q:'A 200A, 120/240V single-phase service has an apparent power capacity of 48 kVA.',correct:true,explain:'S = V_LL x I = 240V x 200A = 48,000 VA (48 kVA). For purely resistive loads at unity PF, P = 48 kW.'},
+{id:203,cat:'load',diff:'Intermediate',fmt:'flip',q:'Minimum VA per outlet for commercial receptacle load calculations per NEC 220.14(I)?',a:'180 VA per single or duplex receptacle',explain:'NEC 220.14(I): Each single or duplex receptacle outlet shall be calculated at not less than 180 VA. Applies to office, commercial, and industrial occupancies - not dwelling units.',ref:'NEC 220.14(I)'},
+{id:204,cat:'load',diff:'Intermediate',fmt:'mc',q:'A 3-phase 480V panel serves 300 kW at 0.85 PF - approximate full-load current:',choices:['361A','424A','520A','250A'],correct:1,explain:'I = P / (sqrt(3) x V_LL x PF) = 300,000 / (1.732 x 480 x 0.85) = 300,000 / 706.6 = 424A.'},
+{id:205,cat:'load',diff:'Intermediate',fmt:'flip',q:'NEC table governing demand loads for household electric cooking equipment?',a:'NEC Table 220.55',explain:'Table 220.55: For 1 range up to 12 kW, use 8 kW demand. For 12-27 kW ranges, add 5% per kW over 12 kW. Significantly reduces required feeder/service capacity.',ref:'NEC Table 220.55'},
+{id:206,cat:'load',diff:'Advanced',fmt:'mc',q:'General lighting load for a 2,000 sq ft dwelling (NEC standard method):',choices:['3,000 VA','6,000 VA','7,000 VA','10,000 VA'],correct:1,explain:'NEC Table 220.12: Dwellings=3 VA/sq ft. 2,000 sq ft x 3 VA/sq ft = 6,000 VA.'},
+{id:207,cat:'load',diff:'Advanced',fmt:'flip',q:'NEC small appliance circuit load for dwelling unit calculations?',a:'1,500 VA for each 20A small appliance branch circuit; minimum two circuits required = 3,000 VA minimum',explain:'NEC 220.52(A): At least two 20A small appliance circuits for kitchen/dining. Each at 1,500 VA before demand factors. Laundry circuit is an additional 1,500 VA per 220.52(B).',ref:'NEC 220.52(A)'},
+{id:208,cat:'load',diff:'Beginner',fmt:'tf',q:'A power factor of 1.0 means the load is purely reactive with no real power being consumed.',correct:false,explain:'PF=1.0 means purely resistive - 100% real power (watts), zero reactive power (VARs). PF=0 would be purely reactive. PF = cos(theta).'},
+{id:209,cat:'load',diff:'Intermediate',fmt:'flip',q:'Difference between kW and kVA?',a:'kW = real (active) power doing actual work. kVA = apparent power (vector sum of real and reactive). kW = kVA x Power Factor.',explain:'Utilities charge commercial customers for both kWh energy and kVA demand. Low PF means more kVA and more current for the same kW of work.',ref:'NEC 220.5'},
+{id:210,cat:'load',diff:'Advanced',fmt:'mc',q:'480V 3-phase motor with FLA=40A - minimum branch circuit conductor ampacity per NEC 430.22:',choices:['40A','44A','50A','60A'],correct:2,explain:'NEC 430.22: Motor branch circuit conductors shall have ampacity of not less than 125% of motor FLA. 40A x 1.25 = 50A.'},
+{id:211,cat:'load',diff:'Advanced',fmt:'flip',q:'NEC 220.83 optional calculation method for existing dwelling unit services?',a:'100% of the first 10 kVA of all loads + 40% of the remainder',explain:'NEC 220.83: Optional method for additions/modifications to existing dwelling services. Typically results in a smaller calculated load than the standard method.',ref:'NEC 220.83'},
+{id:212,cat:'load',diff:'Intermediate',fmt:'tf',q:'The NEC recommends limiting total voltage drop (feeder + branch circuit) to no more than 5%.',correct:true,explain:'NEC informational notes to 210.19(A)(1) and 215.2(A)(3): Recommend max 3% VD on branch circuits or feeders individually, and 5% total. Not mandatory but commonly specified.'},
+{id:213,cat:'load',diff:'Beginner',fmt:'flip',q:'Voltage drop formula for single-phase circuits using circular mils?',a:'VD = (2 x K x I x L) / CM',explain:'K=resistivity constant (copper=12.9 at 75C, aluminum=21.2). I=current (A). L=one-way conductor length (ft). CM=circular mils of conductor.',ref:'NEC Chapter 9'},
+{id:214,cat:'load',diff:'Advanced',fmt:'mc',q:'Per NEC Table 250.66, minimum copper GEC for service conductors up to 350 kcmil:',choices:['2 AWG','1/0 AWG','2/0 AWG','4 AWG'],correct:0,explain:'NEC Table 250.66: Up to 2/0 AWG service conductor -> 8 AWG GEC. Up to 350 kcmil -> 2 AWG GEC. 350-600 kcmil -> 1/0 AWG GEC.',ref:'NEC Table 250.66'},
+{id:215,cat:'load',diff:'Intermediate',fmt:'flip',q:'NEC general lighting unit load for a hospital?',a:'2 VA per square foot',explain:'NEC Table 220.12: Hospitals=2 VA/sq ft. Reflects carefully controlled, zone-based lighting rather than uniform brightness.',ref:'NEC Table 220.12'},
+{id:216,cat:'load',diff:'Beginner',fmt:'mc',q:'3-phase apparent power formula using line-to-line voltage:',choices:['S = V x I','S = sqrt(3) x V_LL x I_L','S = V x I x PF','S = 3 x V_phase x I'],correct:1,explain:'3-phase apparent power: S (VA) = sqrt(3) x V_LL x I_L. Real power: P (W) = sqrt(3) x V_LL x I_L x PF.'},
+{id:217,cat:'load',diff:'Beginner',fmt:'flip',q:'NEC general lighting unit load for a retail store?',a:'3 VA per square foot',explain:'NEC Table 220.12: Stores (retail)=3 VA/sq ft. Does not include show window lighting (220.14(G): 200 VA per linear foot).',ref:'NEC Table 220.12'},
+{id:218,cat:'load',diff:'Intermediate',fmt:'tf',q:'The laundry branch circuit load in a dwelling unit is calculated at 1,500 VA per NEC 220.52(B).',correct:true,explain:'NEC 220.52(B): The laundry circuit is calculated at 1,500 VA. At least one 20A laundry circuit must be provided per 210.52(F).'},
+{id:219,cat:'load',diff:'Intermediate',fmt:'mc',q:'Demand factor for first 3,000 VA of dwelling unit lighting/receptacle load (NEC Table 220.42):',choices:['100%','80%','70%','35%'],correct:0,explain:'NEC Table 220.42: First 3,000 VA of lighting and receptacle loads in dwelling units=100%. Next 117,000 VA=35%. Remainder=25%.'},
+{id:220,cat:'load',diff:'Advanced',fmt:'flip',q:'How do you calculate minimum number of 20A, 120V lighting circuits for a commercial space?',a:'Circuits = Total lighting VA divided by 1,920 VA (80% of 2,400 VA/circuit), rounded up to next whole number',explain:'Since lighting is continuous, each 20A x 120V circuit can carry only 1,920 VA continuously. For 277V: 20A x 277V x 0.80 = 4,432 VA/circuit.'},
+{id:221,cat:'load',diff:'Beginner',fmt:'mc',q:'Resistivity constant K for copper conductors in voltage drop calculations:',choices:['10.4','12.9','21.2','24.0'],correct:1,explain:'K=12.9 for copper at 75C. K=21.2 for aluminum at 75C. These constants represent resistance in ohm-circular mils per foot.'},
+{id:222,cat:'load',diff:'Intermediate',fmt:'flip',q:'How is the largest motor treated in a multi-motor feeder calculation?',a:'Largest motor=125% of its FLA; all other motors=100% of their FLA - both added together for minimum feeder ampacity',explain:'NEC 430.24: Feeder ampacity must be at least 125% of the largest motor FLA + 100% of all other motor FLAs.',ref:'NEC 430.24'},
+{id:223,cat:'load',diff:'Advanced',fmt:'mc',q:'Primary FLA of a 75 kVA, 480V, 3-phase transformer:',choices:['52A','63A','90A','104A'],correct:2,explain:'I_primary = kVA x 1000 / (sqrt(3) x V_primary) = 75,000 / (1.732 x 480) = 90.2A.'},
+{id:224,cat:'load',diff:'Intermediate',fmt:'tf',q:'The neutral of a perfectly balanced 3-phase, 4-wire wye system carries significant current.',correct:false,explain:'In a perfectly balanced system the three phase currents sum to zero in the neutral. Only load imbalance causes neutral current. Triplen harmonics from non-linear loads are an important exception.'},
+{id:225,cat:'load',diff:'Advanced',fmt:'flip',q:'NEC general lighting unit load for schools?',a:'3 VA per square foot',explain:'NEC Table 220.12: Schools=3 VA/sq ft for general lighting load calculation.',ref:'NEC Table 220.12'},
+{id:226,cat:'load',diff:'Beginner',fmt:'mc',q:"Ohm's Law - voltage equals:",choices:['I x R','P / I','I / R','R / I'],correct:0,explain:"Ohm's Law: V = I x R. Derived: I = V/R, R = V/I. Power: P = V x I = I^2 x R = V^2/R."},
+
+{id:227,cat:'load',diff:'Intermediate',fmt:'flip',q:'NEC rule for electric space heating in load calculations?',a:'Fixed electric space heating is calculated at 100% of connected load — no demand factor reduction',explain:'NEC 220.51: Fixed electric space heating shall be calculated at 100% of total connected load. Exception: if heating and A/C are non-coincident (220.60), only the larger load needs to be included in the feeder/service calculation.',ref:'NEC 220.51'},
+{id:228,cat:'load',diff:'Intermediate',fmt:'tf',q:'When sizing a feeder serving both electric heating and air conditioning, only the larger of the two loads must be included.',correct:true,explain:'NEC 220.60 Non-coincident Loads: Where it is unlikely that both heating and cooling operate simultaneously, only the larger load is included in feeder/service calculations. The AHJ may require both if simultaneous operation is possible.'},
+{id:229,cat:'load',diff:'Advanced',fmt:'flip',q:'How do you size a dry-type transformer for a given building load?',a:'Total connected load in kVA (with demand factors) + 20-25% growth factor, then select next standard transformer size (15, 30, 45, 75, 112.5, 150, 225, 300, 500, 750 kVA)',explain:'Standard transformer sizes per ANSI C57.12. Also consider: power factor (affects kVA), harmonic content (K-rating), motor starting voltage dip, future load growth, and temperature rise rating (80C rise = premium efficiency vs. 150C standard).'},
+{id:230,cat:'load',diff:'Beginner',fmt:'mc',q:'NEC general lighting unit load for a storage warehouse?',choices:['0.25 VA/sq ft','0.5 VA/sq ft','1 VA/sq ft','2 VA/sq ft'],correct:0,explain:'NEC Table 220.12: Storage warehouses (storage only)=0.25 VA/sq ft — the lowest standard occupancy unit load. Reflects sparse aisle-only lighting. Warehouses used for product distribution with frequent occupancy may need higher lighting levels.'},
+{id:231,cat:'load',diff:'Advanced',fmt:'tf',q:'For a feeder serving both motors and general lighting, the loads are simply added together at 100%.',correct:false,explain:'NEC 430.24 and 220.40: Motor feeder=125% of largest motor FLA + 100% of all other motor FLAs. The general lighting/receptacle load (per Article 220 with demand factors) is added separately. Non-coincident heating/cooling rule (220.60) also applies.'},
+{id:232,cat:'load',diff:'Intermediate',fmt:'flip',q:'NEC general lighting unit load for a restaurant?',a:'2 VA per square foot',explain:'NEC Table 220.12: Restaurants=2 VA/sq ft. Lower than offices because restaurant lighting is carefully zoned and controlled. Specialty lighting (bars, display cases) is calculated separately per 220.14.',ref:'NEC Table 220.12'},
+{id:233,cat:'load',diff:'Advanced',fmt:'mc',q:'Commercial receptacle load demand factor per NEC 220.44 — loads above 10 kVA may use:',choices:['100%','75%','50%','25%'],correct:2,explain:'NEC 220.44: Receptacle loads per 220.14 in office buildings may be reduced: 100% of first 10 kVA + 50% of remainder. Recognizes that not all outlets are simultaneously loaded in commercial occupancies.',ref:'NEC 220.44'},
+// ═══ LIGHTING & POWER ═══
+{id:400,cat:'lighting',diff:'Beginner',fmt:'flip',q:'What is a lighting control zone?',a:'A defined area served by a single control point (switch, dimmer, or sensor) — required for energy code compliance per ASHRAE 90.1 and IECC',explain:'Energy codes require daylight zones and other zones to be independently controllable. Allows occupants to turn off unneeded lights. Improper zoning = energy code failure during commissioning.'},
+{id:401,cat:'lighting',diff:'Beginner',fmt:'mc',q:'What unit measures illuminance — light falling on a surface?',choices:['Lumen (lm)','Candela (cd)','Footcandle (fc)','Lux per steradian'],correct:2,explain:'Footcandle (fc) = lumens per square foot. Lux = lumens per square meter. 1 fc = 10.76 lux. Candela = luminous intensity (light from a source in a specific direction). Lumen = total light output from a source.'},
+{id:402,cat:'lighting',diff:'Beginner',fmt:'tf',q:'A 20A, 120V circuit can continuously support a maximum of 1,920 watts of lighting load.',correct:true,explain:'NEC 210.19(A)(1): Continuous loads shall not exceed 80% of branch circuit OCPD rating. 20A x 120V = 2,400 VA total capacity x 80% = 1,920 VA maximum for continuous lighting loads.'},
+{id:403,cat:'lighting',diff:'Intermediate',fmt:'flip',q:'Maximum LPD for an open office per ASHRAE 90.1-2019 space-by-space method?',a:'0.61 W/sq ft',explain:'ASHRAE 90.1-2019 Table 9.6.1: Open office=0.61 W/sq ft maximum LPD. This drives adoption of high-efficacy LED fixtures. Exceeding this limit requires compensating reductions elsewhere or an approved exception.'},
+{id:404,cat:'lighting',diff:'Intermediate',fmt:'mc',q:'Primary function of a Lighting Control Relay Panel (LCRP)?',choices:['Provide emergency power to exit signs','Switch line-voltage lighting circuits via low-voltage control signals','Monitor occupancy sensor data centrally','Act as a subpanel for branch circuits'],correct:1,explain:'LCRPs receive 24V DC or other low-voltage signals from switches, occupancy sensors, photosensors, and BMS, then switch 120V or 277V lighting circuits via internal relays. They are the backbone of commercial lighting control systems.'},
+{id:405,cat:'lighting',diff:'Advanced',fmt:'flip',q:'Difference between Class 1 and Class 2 circuits per NEC Article 725?',a:'Class 1: power-limited up to 30V/1000VA, or unlimited voltage circuits. Class 2: limited-energy (max 30V AC / 42.4V DC peak, max 100VA) — relaxed wiring methods allowed.',explain:'Class 2 circuits (thermostats, sensors, AV control, 0-10V dimming) may use smaller conductors (18 AWG min) without the physical protection required for power wiring. Class 1 follows standard NEC wiring methods.',ref:'NEC Article 725'},
+{id:406,cat:'lighting',diff:'Beginner',fmt:'mc',q:'Standard transformer configuration for stepping 480V down to 208Y/120V?',choices:['Autotransformer','Delta-Delta','Delta-Wye','Wye-Wye'],correct:2,explain:'Delta-Wye (delta-Y) transformers are standard for 480V to 208Y/120V. The delta primary blocks zero-sequence harmonics. The wye secondary provides a neutral for single-phase 120V loads. Always Delta primary, Wye secondary for this application.'},
+{id:407,cat:'lighting',diff:'Intermediate',fmt:'tf',q:'Exit signs must be continuously illuminated and connected to an emergency power source per NFPA 101 and NEC 700.',correct:true,explain:'NFPA 101 Section 7.10 and NEC 700.16: Exit signs must be illuminated at all times when the building is occupied. They must be on the emergency system with generator backup or self-contained battery providing at least 90 minutes of illumination.'},
+{id:408,cat:'lighting',diff:'Advanced',fmt:'flip',q:'What is CRI and typical minimums for office and healthcare lighting?',a:'Color Rendering Index (0-100) measures how faithfully a light source renders colors vs. a reference. Offices: CRI 80 minimum. Healthcare exam areas: CRI 90 minimum.',explain:'CRI is specified on luminaire schedules. High CRI ensures accurate color perception — critical for healthcare (skin tone), retail (product appearance), and art galleries. Most modern LEDs achieve CRI 80-95. CRI above 90 is called high CRI.'},
+{id:409,cat:'lighting',diff:'Intermediate',fmt:'mc',q:'Wiring method typically required for luminaire branch circuits in commercial buildings?',choices:['NM-B (Romex)','THHN in EMT conduit or MC Cable','BX armored cable only','UF underground feeder'],correct:1,explain:'Commercial construction typically requires THHN/THWN conductors in EMT conduit or MC (metal-clad) cable. NM-B (Romex) is generally limited to residential and some light commercial wood-frame construction.'},
+{id:410,cat:'lighting',diff:'Advanced',fmt:'flip',q:'What is a K-rated transformer and when is it specified?',a:'A transformer designed for harmonic-rich loads. K-4 = light harmonics, K-13 = moderate, K-20 = heavy harmonic loads from data centers or VFD-heavy facilities',explain:'Non-linear loads (computers, VFDs, LED drivers, UPS) draw non-sinusoidal currents causing harmonics. Harmonics cause excess heating in transformer cores and windings. K-rated transformers have reinforced insulation and oversized neutrals.'},
+{id:411,cat:'lighting',diff:'Beginner',fmt:'tf',q:'Modern LED luminaires have higher efficacy (lumens per watt) than T8 fluorescent lamps.',correct:true,explain:'High-performance commercial LEDs achieve 120-200+ lm/W. Standard T8 fluorescent: 85-100 lm/W. LEDs also have longer rated life (50,000-100,000+ hours vs. 15,000-20,000 hours for fluorescent) and better dimming capability.'},
+{id:412,cat:'lighting',diff:'Advanced',fmt:'mc',q:'Purpose of power factor correction capacitors on a distribution system?',choices:['Increase resistive voltage drop','Supply reactive power locally reducing reactive current from utility','Increase available fault current','Step up feeder voltage'],correct:1,explain:'Capacitors generate reactive (leading) power that cancels the lagging reactive demand of inductive loads. Improves system PF, reduces I-squared-R losses, lowers kVA demand charges, and improves voltage regulation.'},
+{id:413,cat:'lighting',diff:'Intermediate',fmt:'flip',q:'What does a lighting contactor do?',a:'A remotely operated relay switching groups of lighting circuits on/off using low-voltage control signals from switches, time clocks, BMS, or photosensors',explain:'Lighting contactors (electrically held or mechanically held) are specified for multi-circuit control in commercial buildings. Ratings from 30-800A. Mechanically held contactors do not require continuous coil power and do not open during momentary power interruptions.'},
+{id:414,cat:'lighting',diff:'Beginner',fmt:'mc',q:'What does "lumen" measure?',choices:['Luminous intensity from a directional source','Total light output (luminous flux) of a source','Light level falling on a surface','Color accuracy of a light source'],correct:1,explain:'Lumen (lm) = total luminous flux emitted by a source in all directions. A 100W incandescent bulb is approximately 1,600 lm. A high-performance 20W LED luminaire may produce 3,200+ lm.'},
+{id:415,cat:'lighting',diff:'Beginner',fmt:'flip',q:'What is CCT and typical range for office lighting?',a:'Correlated Color Temperature in Kelvin describes warmth/coolness of white light. Offices typically use 3500K-4000K (neutral white).',explain:'2700K-3000K = warm white (residential, hospitality). 3500K-4000K = neutral white (offices, schools, retail). 5000K-6500K = cool/daylight white (healthcare, industrial). CCT is specified on luminaire schedules.'},
+{id:416,cat:'lighting',diff:'Intermediate',fmt:'mc',q:'Function of an occupancy sensor in a lighting control system?',choices:['Dim lights proportional to available daylight','Turn lights off after space is unoccupied for a set time','Set a pre-programmed lighting scene','Provide emergency lighting backup'],correct:1,explain:'Occupancy sensors detect presence via PIR (passive infrared), ultrasonic, or dual-technology. They automatically turn lights off when a space is vacant for a preset time (typically 10-30 min). Required by ASHRAE 90.1 in most commercial space types.'},
+{id:417,cat:'lighting',diff:'Intermediate',fmt:'tf',q:'ASHRAE 90.1-2019 requires daylight-responsive controls in sidelit daylight zones.',correct:true,explain:'ASHRAE 90.1-2019 Section 9.4.1.4: Continuous dimming or multi-step switching responsive to daylight required in sidelit zones (within 1x window head height) and toplit zones (within skylights daylight zone). Significant energy savings result.'},
+{id:418,cat:'lighting',diff:'Advanced',fmt:'flip',q:'Difference between 0-10V and DALI dimming protocols?',a:'0-10V: analog voltage proportionally dims LED drivers but requires separate switched hot to turn off. DALI: digital protocol with individual fixture addressing, two-way communication, scene programming, and fault reporting.',explain:'0-10V is cheaper and simpler. DALI (Digital Addressable Lighting Interface, IEC 62386) allows true individual control of every fixture, dimming to 0.1%, energy monitoring feedback, and group programming without rewiring. DALI-2 is the current interoperable standard.'},
+{id:419,cat:'lighting',diff:'Beginner',fmt:'mc',q:'IES recommended illuminance for general office work (ambient lighting):',choices:['10-20 fc','30-50 fc','75-100 fc','150-200 fc'],correct:1,explain:'IES RP-1 recommends 30-50 footcandles for general office ambient lighting. With VDT (computer) work, lower ambient (25-35 fc) is often preferred to reduce screen glare, supplemented by task lighting at work surfaces.'},
+{id:420,cat:'lighting',diff:'Advanced',fmt:'flip',q:'Wet location vs. damp location for luminaire specification?',a:'Wet location: suitable for direct rain, hose-down, or standing water. Damp location: suitable for high humidity or weather-protected areas but not direct water contact.',explain:'NEC 410.10: Luminaires in wet locations must be wet-location listed. Covered outdoor canopies and parking garage interiors = damp. Exposed outdoor areas, car washes, open parking decks = wet. Wrong listing leads to premature failure and NEC violation.',ref:'NEC Article 100, 410.10'},
+{id:421,cat:'lighting',diff:'Intermediate',fmt:'mc',q:'ASHRAE 90.1 limits what aspect of commercial lighting?',choices:['Minimum illuminance levels','Maximum lighting power density (W/sq ft)','Minimum CRI requirements','Minimum CCT requirements'],correct:1,explain:'ASHRAE 90.1 Section 9 limits maximum LPD (W/sq ft) by building type (building area method) or by space type (space-by-space method). Illuminance levels are IES guidance only. CRI and CCT are design choices.'},
+{id:422,cat:'lighting',diff:'Beginner',fmt:'tf',q:'A 277V branch circuit can power commercial LED luminaires.',correct:true,explain:'Most commercial luminaires have dual-voltage drivers (120/277V or 120-277V universal voltage). 277V = line-to-neutral voltage of a 480Y/277V system. Using 277V reduces branch circuit current by approximately 2.3 vs. 120V, allowing more fixtures per circuit or smaller wire.'},
+{id:423,cat:'lighting',diff:'Advanced',fmt:'flip',q:'What is an IES photometric file and how is it used in design?',a:'A standardized data file (.ies) containing measured light distribution data for a specific luminaire — used in AGi32, DIALux, or Revit to calculate footcandle levels and verify design targets before specification.',explain:'The IES file format (ANSI/IESNA LM-63) includes candela values at all angles, lumens, lamp data, and fixture geometry. Manufacturers publish IES files for every listed product. Engineers use these files to verify footcandle levels comply with IES recommendations.'},
+{id:424,cat:'lighting',diff:'Intermediate',fmt:'mc',q:'Emergency lighting minimum illuminance along egress paths per NEC 700.16 and NFPA 101:',choices:['0.5 fc average','1 fc average, 0.1 fc minimum at floor level','5 fc average','10 fc average'],correct:1,explain:'NEC 700.16 and NFPA 101 7.9.2.1: Emergency lighting must provide not less than 1 footcandle average at floor level, with a minimum of 0.1 footcandle at any point, for at least 90 minutes after normal power failure.'},
+{id:425,cat:'lighting',diff:'Advanced',fmt:'tf',q:'A standard 0-10V LED driver turns the luminaire completely off when control voltage drops to 0V.',correct:false,explain:'Most standard 0-10V LED drivers dim to their minimum level (typically 1-10%) at 0V signal but do NOT turn the fixture off — a separate switched hot wire must break power to turn it off. "Dim-to-off" drivers that shut off at 0V must be explicitly specified.'},
+{id:426,cat:'lighting',diff:'Intermediate',fmt:'flip',q:'What does luminous efficacy mean?',a:'Ratio of luminous flux output (lumens) to power consumed (watts) — expressed in lumens per watt (lm/W)',explain:'Incandescent: ~15 lm/W. CFL: ~60 lm/W. T8 fluorescent: ~90 lm/W. High-performance LED: 130-200+ lm/W. Efficacy is a key metric in luminaire schedules and required by energy codes for compliance.'},
+{id:427,cat:'lighting',diff:'Advanced',fmt:'mc',q:'Maximum LPD for a classroom per ASHRAE 90.1-2019 space-by-space method:',choices:['0.50 W/sq ft','0.71 W/sq ft','1.0 W/sq ft','1.24 W/sq ft'],correct:1,explain:'ASHRAE 90.1-2019 Table 9.6.1: Classroom/lecture/training room=0.71 W/sq ft maximum LPD. All luminaires in the space count — including accent and supplemental lighting.'},
+{id:428,cat:'lighting',diff:'Beginner',fmt:'flip',q:'Difference between a "lamp" and a "luminaire"?',a:'Lamp = the light source (LED module, bulb, tube). Luminaire = the complete fixture assembly including lamp, housing, reflector/optics, driver/ballast, and lens/diffuser.',explain:'The NEC and IES use "luminaire" for complete fixtures. "Lamp" refers to the replaceable or integrated light source. Use correct terminology in engineering specifications and code documents.'},
+{id:429,cat:'lighting',diff:'Intermediate',fmt:'tf',q:'Track lighting load is calculated at 150 VA per linear foot of track per NEC 220.43(B).',correct:true,explain:'NEC 220.43(B): Fixed multi-outlet assemblies and track lighting shall be calculated at 150 VA per linear foot when loads are likely to be used simultaneously. When simultaneous use is unlikely, 1 ampere per linear foot may be used.',ref:'NEC 220.43(B)'},
+{id:430,cat:'lighting',diff:'Advanced',fmt:'flip',q:'What is the purpose of specifying a "Type IC" recessed luminaire for insulated ceilings?',a:'Type IC (Insulation Contact) luminaires are thermally rated and listed to be in direct contact with building insulation without creating a fire hazard',explain:'NEC 410.116(B): Recessed luminaires in contact with thermal insulation must be Type IC listed. Non-IC luminaires require 3 inches of air space from insulation. Using a non-IC fixture in contact with insulation is a fire hazard and NEC violation.',ref:'NEC 410.116'},
+// ═══ LOW VOLTAGE ═══
+{id:600,cat:'lowvolt',diff:'Beginner',fmt:'flip',q:'What standard governs structured cabling for commercial buildings?',a:'ANSI/TIA-568 — Commercial Building Telecommunications Cabling Standard',explain:'TIA-568 series defines cabling components, installation practices, field testing, and system performance for commercial buildings. TIA-568.1 (commercial), TIA-568.2 (balanced twisted-pair), TIA-568.3 (optical fiber).'},
+{id:601,cat:'lowvolt',diff:'Beginner',fmt:'mc',q:'Current standard cable category for new commercial 10GbE installations?',choices:['Cat 5e','Cat 6','Cat 6A','Cat 7'],correct:2,explain:'Cat 6A (Augmented Category 6, TIA-568.2-D) supports 10GBASE-T to 100m full channel. Cat 6 supports 10GbE only to 37-55m. Cat 6A is specified for all new commercial installations to future-proof for bandwidth growth.'},
+{id:602,cat:'lowvolt',diff:'Beginner',fmt:'tf',q:'A fire alarm circuit wired in Class B configuration can survive a single open fault without losing all devices.',correct:false,explain:'Class B two-wire fire alarm circuits cannot tolerate an open fault — devices beyond the break are disconnected. Class A four-wire loop circuits return to the FACP from both ends, so a single open fault is supervised without device loss.'},
+{id:603,cat:'lowvolt',diff:'Intermediate',fmt:'flip',q:'Difference between a fire alarm NAC and SLC?',a:'NAC (Notification Appliance Circuit) = powers horns, strobes, and speakers on alarm. SLC (Signaling Line Circuit) = two-wire loop polling addressable detectors, modules, and manual stations.',explain:'Modern addressable FACP systems use SLC loops (up to 250 devices per loop) to individually communicate with each device. NAC circuits deliver 24V DC supervised power to notification appliances on alarm.'},
+{id:604,cat:'lowvolt',diff:'Intermediate',fmt:'mc',q:'Maximum horizontal cable run per TIA-568 structured cabling:',choices:['50m','90m','100m','150m'],correct:1,explain:'TIA-568: Permanent link (patch panel to work area outlet) = 90m (295 ft) maximum. Total channel (including patch cords at both ends) = 100m (328 ft). The 10m allowance is for patch cords at the TR and work area.'},
+{id:605,cat:'lowvolt',diff:'Advanced',fmt:'flip',q:'What is a BACnet gateway in a building automation system?',a:'A device translating between different BAS communication protocols (e.g., Modbus RTU to BACnet IP) enabling interoperability between diverse building systems',explain:'BACnet (ASHRAE 135) is the dominant open protocol for BAS/BMS. Gateways allow legacy systems, chillers, generators, and access control systems to share data with the central BMS without replacing equipment.'},
+{id:606,cat:'lowvolt',diff:'Beginner',fmt:'tf',q:'Power conductors and data cables (Cat 6) may be run in the same conduit.',correct:false,explain:'NEC 725.136: Class 2 and Class 3 circuits shall not occupy the same cable tray or raceway as power conductors unless separated by a barrier. Even if physically possible, mixing causes EMI that degrades data performance.'},
+{id:607,cat:'lowvolt',diff:'Intermediate',fmt:'mc',q:'NFPA standard governing fire alarm system design and installation?',choices:['NFPA 13','NFPA 72','NFPA 101','NFPA 110'],correct:1,explain:'NFPA 72 is the National Fire Alarm and Signaling Code. Covers design, installation, inspection, testing, and maintenance. NFPA 101 specifies when systems are required. NFPA 13 covers sprinklers. NFPA 110 covers emergency power.'},
+{id:608,cat:'lowvolt',diff:'Advanced',fmt:'flip',q:'Class 2 circuit output limitations per NEC 725.121?',a:'Maximum 30V AC (42.4V DC peak) AND maximum 100VA output — limits power to reduce fire and shock hazard, allowing relaxed wiring methods',explain:'Class 2 power sources must have listed, limited outputs. Common applications: thermostats, AV control wiring, low-voltage occupancy sensors, door access readers, 0-10V dimming. Class 2 wiring may be as small as 18 AWG.',ref:'NEC 725.121'},
+{id:609,cat:'lowvolt',diff:'Intermediate',fmt:'flip',q:'What does a managed PoE switch provide beyond an unmanaged switch?',a:'Layer 2/3 network management (VLANs, QoS, port monitoring) PLUS per-port PoE power control, budgeting, and scheduling',explain:'Managed switches allow remote configuration via web GUI, CLI, or SNMP. IT can isolate VLANs, prioritize VoIP traffic, monitor port utilization, schedule PoE power (turn off cameras overnight), and set PoE power limits per port.'},
+{id:610,cat:'lowvolt',diff:'Advanced',fmt:'mc',q:'Maximum coverage radius for a spot-type smoke detector on a smooth flat ceiling per NFPA 72:',choices:['15 ft','21.2 ft','30 ft','50 ft'],correct:1,explain:'NFPA 72 Table 17.7.3.1: Maximum center-to-center spacing=30 ft on smooth ceilings, giving a coverage radius of 21.2 ft (30 divided by sqrt(2)). Coverage area per detector approximately 900 sq ft.'},
+{id:611,cat:'lowvolt',diff:'Beginner',fmt:'flip',q:'Difference between conventional and addressable fire alarm systems?',a:'Conventional: initiating devices grouped by zone — only zone location identified. Addressable: each device has a unique address — FACP identifies exact device in alarm, trouble, or supervisory condition.',explain:'Addressable systems allow identification of any single device anywhere in the building. Speeds emergency response and simplifies maintenance. Required by most AHJs for all but the smallest buildings.'},
+{id:612,cat:'lowvolt',diff:'Advanced',fmt:'tf',q:'Single-mode fiber optic cable can transmit signals over much longer distances than multimode fiber without repeaters.',correct:true,explain:'Single-mode fiber (9 micron core, laser source) can transmit 10Gbps over 40-80 km without amplification. Multimode fiber (50/62.5 micron core, LED/VCSEL source) is limited to 300-500m at 10GbE. Single-mode is used for campus backbones and WAN connections.'},
+{id:613,cat:'lowvolt',diff:'Beginner',fmt:'mc',q:'PoE standard IEEE 802.3af delivers maximum power per port of:',choices:['7.5W','15.4W','30W','90W'],correct:1,explain:'IEEE 802.3af (PoE): 15.4W max at PSE (switch port), 12.95W at PD (powered device) after cable losses. IEEE 802.3at (PoE+): 30W/25.5W. IEEE 802.3bt Type 3 (PoE++): 60W/51W. Type 4: 90W/71.3W.'},
+{id:614,cat:'lowvolt',diff:'Beginner',fmt:'flip',q:'What is a Telecommunications Room (TR) in a structured cabling system?',a:'A dedicated, secured room housing the horizontal cross-connect (patch panels), active network equipment, and horizontal cable terminations serving a floor or building area',explain:'TIA-568 and TIA-569 define TR requirements: minimum 10 sq ft, 24/7 HVAC (64-75F), dedicated 20A circuits, security access control, overhead cable management. One TR per floor per 10,000 sq ft of served area.'},
+{id:615,cat:'lowvolt',diff:'Intermediate',fmt:'tf',q:'Fire alarm pull stations must be mounted with the operable part between 3.5 ft and 5 ft above floor level per NFPA 72.',correct:true,explain:'NFPA 72 17.14.8.2: Manual fire alarm boxes shall be mounted so the operable part is between 42 inches (3.5 ft) and 60 inches (5 ft) above floor level. Within ADA reach range requirements for both standing and wheelchair users.'},
+{id:616,cat:'lowvolt',diff:'Intermediate',fmt:'mc',q:'Minimum audibility in sleeping areas for fire alarm notification per NFPA 72:',choices:['55 dBA','70 dBA','75 dBA or 15 dBA above ambient (whichever is greater)','85 dBA'],correct:2,explain:'NFPA 72 18.4.5.2: In sleeping areas, audible appliances shall produce at least 75 dBA, or at least 15 dB above the average ambient sound level, whichever is greater — measured at the pillow level.'},
+{id:617,cat:'lowvolt',diff:'Advanced',fmt:'flip',q:'Difference between POTS, VoIP, and SIP in building telephony?',a:'POTS = Plain Old Telephone Service (analog copper pair). VoIP = Voice over Internet Protocol (digitized voice over IP network). SIP = Session Initiation Protocol (signaling protocol managing VoIP call setup and teardown).',explain:'Modern buildings use VoIP phones over Cat 6A with PoE switches. SIP trunks connect to the PSTN via internet instead of traditional T1/PRI lines. Legacy POTS lines are being discontinued by carriers.'},
+{id:618,cat:'lowvolt',diff:'Beginner',fmt:'mc',q:'Typical operating voltage for low-voltage LED tape/strip lighting:',choices:['12V or 24V DC','48V DC','120V AC','277V AC'],correct:0,explain:'LED tape lights operate at 12V or 24V DC, supplied by a constant voltage LED driver. 24V systems allow longer runs with less voltage drop than 12V. Maximum run length: 12V approximately 10-16 ft, 24V approximately 20-33 ft before visible dimming at the far end.'},
+{id:619,cat:'lowvolt',diff:'Advanced',fmt:'tf',q:'A magnetic door lock on a fire-rated egress door must fail in the unlocked position upon loss of power.',correct:true,explain:'NFPA 101 and local building codes require electromagnetic locks on egress doors to fail-safe (fail-open/unlocked) upon power loss, fire alarm activation, or manual fire alarm system actuation. Ensures occupants can always exit in an emergency.'},
+{id:620,cat:'lowvolt',diff:'Advanced',fmt:'flip',q:'What is a Distributed Antenna System (DAS) and when is it required?',a:'A network of distributed antennas connected to a head-end to provide cellular and/or public safety radio coverage inside buildings with poor signal penetration',explain:'Public safety DAS for first responder communication is required by many jurisdictions for buildings above a certain size. Commercial DAS for cellular coverage is separate and requires carrier coordination. The MEP engineer coordinates conduit infrastructure and power.'},
+{id:621,cat:'lowvolt',diff:'Intermediate',fmt:'mc',q:'Purpose of a video surveillance NVR?',choices:['Network Video Recorder — stores and manages IP camera video','Network VLAN Router — segments IP camera traffic','Normal Voltage Regulator — conditions camera power','Noise and Vibration Reduction — dampens equipment sound'],correct:0,explain:'NVR (Network Video Recorder) manages, records, and stores IP camera video streams over the network. DVR (Digital Video Recorder) is the older equivalent for analog cameras. NVRs are sized by camera count, resolution, and retention period.'},
+{id:622,cat:'lowvolt',diff:'Advanced',fmt:'flip',q:'Difference between VESDA aspirating smoke detection and standard spot-type smoke detectors?',a:'VESDA continuously samples air through pipe networks and detects smoke at concentrations 1,000x lower than spot detectors — providing very early warning for mission-critical spaces',explain:'VESDA (aspirating smoke detection/ASD) is used in data centers, telecom rooms, museums, and clean rooms. Detects smoke before it is visible. Standard spot detectors respond at much higher concentrations when a fire is already well-established.'},
+// ═══ MEP COORDINATION ═══
+{id:800,cat:'mep',diff:'Beginner',fmt:'flip',q:'What does MEP stand for?',a:'Mechanical, Electrical, Plumbing — the three primary building systems engineering disciplines',explain:'MEP engineers design the systems making spaces functional: mechanical (HVAC, refrigeration), electrical (power, lighting, communications), plumbing (domestic water, drainage, gas). Sometimes extended to MEPFP (adding Fire Protection).'},
+{id:801,cat:'mep',diff:'Beginner',fmt:'mc',q:'What is BIM primarily used for in MEP design?',choices:['Generating invoices','3D coordination detecting spatial conflicts before construction','Structural load analysis','Code compliance documentation only'],correct:1,explain:'BIM (Building Information Modeling) in Revit, Navisworks, or BricsCAD allows all MEP disciplines to model systems in a shared 3D environment. Clash detection finds conflicts (duct through beam, conduit through pipe) digitally before costly field problems.'},
+{id:802,cat:'mep',diff:'Beginner',fmt:'tf',q:'Electrical conduit always has routing priority over ductwork in MEP coordination.',correct:false,explain:'No MEP system has automatic priority. General rule: structure first, then gravity drainage (fixed slope), then large ductwork, then piping, then conduit (most flexible to reroute). All routing conflicts are resolved in coordination meetings.'},
+{id:803,cat:'mep',diff:'Intermediate',fmt:'flip',q:'What is a MEP coordination drawing?',a:'A composite drawing showing all MEP systems in the same ceiling/wall space, used to resolve conflicts before installation — typically produced in BIM by the GC or mechanical contractor',explain:'Coordination drawings are required by many project specs. All trades model their systems and conflicts are identified. Electrical must model cable tray, large conduit runs, and major junction boxes to participate effectively in BIM coordination.'},
+{id:804,cat:'mep',diff:'Intermediate',fmt:'mc',q:'Standard clearance between electrical conduit and hot water piping in MEP coordination:',choices:['No minimum','1 inch minimum','3 inches minimum','6 inches minimum'],correct:2,explain:'Standard MEP coordination practice: 3 inches minimum clearance between electrical conduit and hot water piping. Prevents heat damage to conductor insulation and allows pipe insulation installation. Some specs require 6 inches for steam piping.'},
+{id:805,cat:'mep',diff:'Advanced',fmt:'flip',q:'What is an equipment submittal review?',a:'Formal review of contractor-proposed shop drawings, product data, and samples verifying they meet design specifications and code requirements before installation',explain:'The EOR reviews (not "approves") submittals for electrical equipment: switchboards, panelboards, transformers, luminaires, emergency systems. Reviews confirm voltage, amperage, interrupting rating, bus rating, listing, dimensions, and spec compliance.'},
+{id:806,cat:'mep',diff:'Beginner',fmt:'tf',q:'The AHJ (Authority Having Jurisdiction) is always the local fire marshal.',correct:false,explain:'The AHJ is the entity responsible for enforcing a code and it varies by context: local building department (most common for electrical), fire marshal (life safety), state electrical inspector, OSHA (workplace), insurance underwriter, or utility. Multiple AHJs may apply to one project.'},
+{id:807,cat:'mep',diff:'Intermediate',fmt:'mc',q:'What electrical drawing shows distribution hierarchy from utility to all panels?',choices:['Site plan','Single-line diagram (SLD)','Panel schedule','Electrical floor plan'],correct:1,explain:'The single-line diagram (SLD) shows the complete electrical distribution hierarchy: utility transformer to main service to switchboard to distribution panels to branch panels to loads. Shows bus ratings, breaker sizes, wire sizes. Most referenced drawing during construction.'},
+{id:808,cat:'mep',diff:'Advanced',fmt:'flip',q:'What is SCCR and why is it critical for equipment selection?',a:'Short Circuit Current Rating (kA) — maximum fault current equipment can safely interrupt or withstand. Equipment SCCR must meet or exceed available fault current at its installation point.',explain:'The engineer calculates available fault current from utility/transformer, then verifies every piece of equipment has adequate SCCR. Underrated equipment can violently fail (arc blast) during a fault. Required by NEC 110.9 and 110.10.',ref:'NEC 110.9, 110.10'},
+{id:809,cat:'mep',diff:'Intermediate',fmt:'tf',q:'An RFI in construction is submitted by the design team to the contractor.',correct:false,explain:'RFIs (Requests for Information) are submitted by contractors, subcontractors, or suppliers to the design team when documents are unclear, conflicting, or missing information. The EOR responds. RFI responses become part of the official project record.'},
+{id:810,cat:'mep',diff:'Advanced',fmt:'mc',q:'Primary purpose of a selective coordination study:',choices:['Size all wire gauges','Ensure only the OCPD closest to a fault trips, leaving upstream systems energized','Test power quality and harmonics','Balance phase loads in panels'],correct:1,explain:'Selective coordination ensures a fault trips only the nearest upstream OCPD, maintaining power to all unaffected areas. Required by NEC 700.32 (emergency systems), 701.27 (legally required standby), and 708.54 (critical operations systems).'},
+{id:811,cat:'mep',diff:'Beginner',fmt:'flip',q:'What is a panel schedule on electrical drawings?',a:'A tabular schedule for each panelboard listing circuit numbers, breaker sizes (amps/poles), load descriptions, voltages, and connected loads in VA or watts',explain:'Panel schedules are one of the most referenced electrical documents during construction and commissioning. NEC 408.4 requires a circuit directory be posted inside each panel — the panel schedule is this directory.',ref:'NEC 408.4'},
+{id:812,cat:'mep',diff:'Intermediate',fmt:'flip',q:'What is the Engineer of Record (EOR) responsible for?',a:'Signing and sealing engineering documents, ensuring code compliance, responding to RFIs and submittals, and providing professional engineering judgment throughout design and construction administration',explain:'The EOR carries legal professional responsibility for the design. Must be a licensed PE in the state of the project. During CA, the EOR reviews submittals, responds to RFIs, issues clarifications, and conducts site observations.'},
+{id:813,cat:'mep',diff:'Beginner',fmt:'mc',q:"What is an ASI (Architect's Supplemental Instruction)?",choices:['A change increasing the contract sum','A clarification or minor directive to contractor not affecting cost or time','A formal substitution request','A claim for additional payment'],correct:1,explain:'ASIs are issued by the architect/EOR to clarify or supplement construction documents without changing the contract sum or date. If a change affects cost or schedule, a Proposal Request or Change Order is issued instead. ASIs are numbered and tracked.'},
+{id:814,cat:'mep',diff:'Intermediate',fmt:'flip',q:'What is the purpose of a power quality study (harmonic analysis)?',a:'Analyzes current and voltage distortion from non-linear loads to determine if harmonics will cause equipment overheating, neutral conductor overloading, or utility compliance issues',explain:'Harmonic studies identify need for K-rated or harmonic-mitigating transformers, oversized neutral conductors, harmonic filters, or line reactors. Required for large data centers, hospitals, and industrial facilities with significant VFD or UPS loads.'},
+{id:815,cat:'mep',diff:'Advanced',fmt:'mc',q:'Purpose of a ground fault protection relay on a 480V switchboard (NEC 230.95):',choices:['Prevent overloads on individual branch circuits','Detect low-level ground faults not clearing standard overcurrent devices','Increase available fault current for motor starting','Provide surge protection'],correct:1,explain:'GFPE detects low-level arcing ground faults (5A-1,200A) too low to trip the main breaker but high enough to cause fires. Required on solidly grounded 480Y/277V services with service disconnect rated 1,000A or more.',ref:'NEC 230.95'},
+{id:816,cat:'mep',diff:'Beginner',fmt:'tf',q:'A transfer switch is required to safely connect a backup generator to building loads.',correct:true,explain:'NEC 702.5 and NFPA 110: Transfer switches (automatic ATS or manual MTS) prevent the generator and utility from being connected simultaneously, which would cause dangerous backfeed to utility workers.'},
+{id:817,cat:'mep',diff:'Intermediate',fmt:'flip',q:'What is a power monitoring system (PMS) in a commercial building?',a:'A network of metering devices connected to software tracking energy consumption, demand, and power quality throughout the electrical distribution system',explain:'PMS enables energy management, tenant submetering for billing, LEED measurement and verification credits, demand charge management, and power quality diagnostics. Common meters: Schneider PM8000, Eaton IQ, GE Multilin.'},
+{id:818,cat:'mep',diff:'Advanced',fmt:'mc',q:'What NEC article covers Critical Operations Power Systems (COPS)?',choices:['Article 700','Article 701','Article 702','Article 708'],correct:3,explain:'Article 708 covers COPS — power systems for facilities designated by governmental authorities as critical to national security (emergency dispatch centers, data centers serving emergency management). More stringent than Articles 700, 701, or 702.'},
+{id:819,cat:'mep',diff:'Intermediate',fmt:'tf',q:'Electrical equipment rooms should be located away from plumbing and HVAC piping whenever possible.',correct:true,explain:'Best practice and NEC 110.26(E): Electrical equipment spaces should be free of piping and ductwork. Water above or near switchgear and panels is a serious safety and reliability hazard. AHJs increasingly enforce this separation.'},
+{id:820,cat:'mep',diff:'Advanced',fmt:'flip',q:'What is an arc flash study and what does it produce?',a:'An engineering analysis per NFPA 70E and IEEE 1584 calculating incident energy (cal/cm2) at each piece of electrical equipment — used to determine required PPE and establish arc flash boundaries',explain:'Arc flash studies require system data (transformer impedance, upstream OCPDs, bus ratings, cable lengths). IEEE 1584 (2018) equations calculate incident energy. Results are posted on arc flash warning labels on each piece of equipment.',ref:'NFPA 70E, IEEE 1584'},
+{id:821,cat:'mep',diff:'Beginner',fmt:'mc',q:'What does a single-line diagram (SLD) show?',choices:['Exact conduit routing in 3D','System hierarchy with equipment ratings, breaker sizes, bus ratings shown with one line per circuit','Grounding electrode layout','Luminaire placement and circuit numbers'],correct:1,explain:'The SLD is the most important electrical engineering document. Shows the entire distribution system from utility to loads using a single line for all phases. Every component (switchgear, transformers, panels, generators, ATSs) is shown with ratings.'},
+{id:822,cat:'mep',diff:'Advanced',fmt:'tf',q:"A photovoltaic (PV) solar system connected to a building's electrical system must comply with NEC Article 690.",correct:true,explain:'NEC Article 690 covers PV systems: design, disconnects, wiring methods, grounding, inverters, and interconnection. Article 705 covers interconnection of multiple power sources. Both articles must be followed for grid-tied solar systems.'},
+{id:823,cat:'mep',diff:'Intermediate',fmt:'flip',q:'Difference between a switchboard and a panelboard?',a:'Switchboard: large floor-mounted equipment (front and rear accessible) — typically main service or distribution board rated up to 5,000A+. Panelboard: wall-mounted (front access only) — branch circuit distribution rated up to 1,200A bus.',explain:'Both are covered by NEC Article 408. Switchboards have larger bus ratings and more flexibility for metering and protection relays. Panelboards are the familiar "breaker boxes" throughout buildings. Switchgear has draw-out breakers and higher fault ratings.'},
+{id:824,cat:'mep',diff:'Advanced',fmt:'mc',q:'What is a load bank test used for in emergency generator commissioning?',choices:['Check fuel tank level','Apply rated load to verify generator performance under full kW/kVA','Test ATS transfer time only','Verify UPS battery backup duration'],correct:1,explain:'Load bank testing applies resistive (and sometimes reactive) loads equal to the generator rated capacity to verify it maintains voltage and frequency within tolerances and sustains rated output. Required by NFPA 110 for acceptance testing of Level 1 systems at 100% rated load for 2+ hours.'},
+{id:825,cat:'mep',diff:'Intermediate',fmt:'flip',q:'What is a conduit stub-up and why must the electrical engineer show it on drawings?',a:'A short conduit section rising from a concrete slab or through a wall to route conductors upward — must be shown on drawings so they are cast into concrete during construction',explain:'Stub-ups must be coordinated with structural engineers (penetrating slabs affects structural integrity), scheduled before concrete pours, and verified by the GC. Showing stub-ups on drawings prevents costly core drilling after slabs are poured.'},
+{id:826,cat:'mep',diff:'Beginner',fmt:'tf',q:'In most states, a licensed PE must sign and seal electrical drawings for new commercial construction.',correct:true,explain:'State engineering licensure laws require a licensed PE to sign and seal construction documents before they can be submitted for building permits. This is the legal obligation of the EOR. The PE is legally responsible for the design.'},
+{id:827,cat:'mep',diff:'Intermediate',fmt:'mc',q:'Purpose of cable tray in commercial construction?',choices:['Contain individual branch circuits in conduit','Support and route multiple cables/conduits over long distances in accessible spaces','Serve as structural support','Act as the sole equipment grounding path'],correct:1,explain:'Cable tray (NEC Article 392) supports and routes large numbers of cables (power feeders, control wiring, data, communications) in accessible spaces — mechanical rooms, electrical rooms, industrial areas, data centers. Open design makes future cable additions easier than conduit.'},
+{id:828,cat:'mep',diff:'Advanced',fmt:'flip',q:'What is a double-ended switchboard with bus tie?',a:'A switchboard with two main breakers (from two utility sources or one utility plus one generator) connected by a normally-open bus tie breaker — if one source fails, the tie closes to restore power from the other source',explain:'Double-ended switchgear is standard for critical facilities (hospitals, data centers). Two utility feeds come into separate main breakers. The bus tie is interlocked so both mains and the tie cannot be closed simultaneously (two-out-of-three interlock).'},
+{id:829,cat:'mep',diff:'Advanced',fmt:'mc',q:'Minimum transfer time for Level 1 emergency power systems per NFPA 110 Table 4.1(b):',choices:['10 seconds','60 seconds','2 minutes','5 minutes'],correct:0,explain:'NFPA 110 Table 4.1(b): Level 1 EPSS (life safety systems in hospitals, high-rise buildings) must achieve full load transfer within 10 seconds of normal power loss. Level 2 = 60 seconds. Met by automatic transfer switches plus quick-start generator.'},
+{id:830,cat:'mep',diff:'Intermediate',fmt:'tf',q:'An IR thermographic scan of electrical equipment can detect hot spots from loose connections or overloaded circuits.',correct:true,explain:'IR thermography (thermal imaging) is a predictive maintenance and commissioning verification tool. Hot spots at bus connections, circuit breaker terminals, and transformer windings indicate problems before failure. Scans must be performed under minimum 40% load to be meaningful.'},
+// ═══ BUSINESS & PM ═══
+{id:1000,cat:'business',diff:'Beginner',fmt:'flip',q:'What is a Scope of Work (SOW) in consulting engineering?',a:'A document defining engineering services to be provided, deliverables, project phases, schedule, and specific exclusions for a project',explain:'The SOW is the foundation of the consulting agreement. It defines what the engineer will do and — critically — what is NOT included. Ambiguous SOWs lead to scope creep, disputes, and unprofitable projects. "If it is not in the scope, it is extra."'},
+{id:1001,cat:'business',diff:'Beginner',fmt:'mc',q:'What does a PE license allow an engineer to do?',choices:['Sign and seal engineering documents for public projects','Manage construction projects without additional licensure','Practice any engineering discipline in any state','Replace the need for E&O insurance'],correct:0,explain:'A PE (Professional Engineer) license is required to legally sign and seal engineering documents for public commercial and industrial projects. Earned by passing FE exam, gaining 4+ years experience under PE supervision, then passing the PE exam.'},
+{id:1002,cat:'business',diff:'Beginner',fmt:'tf',q:'A construction cost estimate prepared by the MEP engineer is a guaranteed price for construction.',correct:false,explain:'A CCE is an "Opinion of Probable Cost" — engineers are NOT guarantors of construction costs. Actual bid prices depend on contractor overhead, labor market, material prices, and competition. Engineers are not liable for cost overruns unless negligent.'},
+{id:1003,cat:'business',diff:'Intermediate',fmt:'flip',q:'Typical MEP design phases and general completion levels?',a:'SD (Schematic Design) ~30% — DD (Design Development) ~60% — CD (Construction Documents) 100% — CA (Construction Administration)',explain:'SD: system concepts, rough sizing, preliminary layouts. DD: equipment selected and sized, routing resolved, coordination begun. CD: permit-ready drawings and specifications. CA: submittals, RFIs, site observations, and project closeout.'},
+{id:1004,cat:'business',diff:'Intermediate',fmt:'mc',q:'LEED stands for:',choices:['Leadership in Energy and Environmental Design','Licensed Electrical Engineering Design','Load Estimation and Energy Documentation','Light Efficiency and Equipment Design'],correct:0,explain:'LEED (Leadership in Energy and Environmental Design) is USGBC green building certification. MEP engineers contribute to: Energy and Atmosphere credits (energy modeling, efficient systems), Indoor Environmental Quality credits, and Water Efficiency credits.'},
+{id:1005,cat:'business',diff:'Intermediate',fmt:'flip',q:'What is building commissioning (Cx)?',a:"A systematic quality assurance process verifying building systems are designed, installed, tested, and operating according to the Owner's Project Requirements (OPR) and Basis of Design (BOD)",explain:'Electrical commissioning: megger testing, IR scanning, emergency system testing (NFPA 110 load bank), ATS transfer time testing, lighting control programming verification, fire alarm testing, and energy monitoring system calibration.'},
+{id:1006,cat:'business',diff:'Advanced',fmt:'mc',q:'Which contract type is most favorable when project scope is poorly defined?',choices:['Lump sum fixed fee','Time and Materials (T&M)','Unit price contract','Guaranteed Maximum Price (GMP)'],correct:1,explain:'T&M bills actual hours at agreed rates plus material markup. It protects the engineer when scope evolves. Lump sum contracts transfer scope risk to the engineer — scope growth eats into profit without additional payment.'},
+{id:1007,cat:'business',diff:'Beginner',fmt:'tf',q:'Errors and Omissions (E&O) insurance covers consulting engineers for claims arising from design mistakes.',correct:true,explain:'E&O (professional liability) insurance covers legal defense costs and damages if a client claims financial loss from design errors, omissions, or negligent professional advice. Most clients require engineers to carry minimum E&O coverage.'},
+{id:1008,cat:'business',diff:'Advanced',fmt:'flip',q:'Purpose of a Basis of Design (BOD) document?',a:'A narrative document recording design criteria, applicable codes, standards, equipment selection rationale, and engineering assumptions — enabling future engineers to understand why systems were designed as they were',explain:'The BOD is critical for life-safety systems. It references specific code editions used, owner requirements, utility constraints, and design decisions. Invaluable for renovations 20+ years later when original drawings may be incomplete.'},
+{id:1009,cat:'business',diff:'Intermediate',fmt:'mc',q:'What must the electrical engineer coordinate with the utility company during design?',choices:['Interior finish colors','Service voltage, metering type, available fault current, transformer size/ownership, and connection method','Floor plan layout','Plumbing fixture selections'],correct:1,explain:'Utility coordination determines: available service voltage, primary vs. secondary metering, transformer ownership (utility-owned vs. owner-furnished), available short circuit current (for SCCR sizing), and physical connection requirements.'},
+{id:1010,cat:'business',diff:'Intermediate',fmt:'flip',q:'What is Value Engineering (VE)?',a:'A structured review of the design identifying cost savings while maintaining function, quality, and code compliance — typically initiated when construction bids exceed the project budget',explain:'Common VE substitutions: standard LED fixtures for designer fixtures, EMT for RMC in accessible areas, aluminum feeders for copper above 1 AWG, standard gear brands for premium brands. EOR must review all VE proposals for code compliance.'},
+{id:1011,cat:'business',diff:'Advanced',fmt:'tf',q:'An electrical PE can legally provide structural opinions about building load capacity if they have extensive experience.',correct:false,explain:'Engineering practice is regulated by state licensure laws. An electrical PE cannot provide structural engineering opinions — this constitutes unlicensed practice of structural engineering. Risks license revocation, personal liability, and uninsured claims.'},
+{id:1012,cat:'business',diff:'Intermediate',fmt:'flip',q:'What does NTP (Notice to Proceed) mean?',a:'A written authorization from the client formally authorizing the engineer to begin billable work on a project or specific phase',explain:'No billable work should begin without an NTP. NTP triggers the project schedule and fee authorization. Without NTP, fees may be unrecoverable if the client cancels. Many firms accept email NTPs for speed but follow up with formal contracts.'},
+{id:1013,cat:'business',diff:'Advanced',fmt:'mc',q:'Legal standard of care for a licensed engineer:',choices:['Delivering a perfect error-free design','Level of skill and care ordinarily exercised by competent engineers in similar circumstances in the same geographic area and time','Always providing the lowest-cost solution','Meeting code minimum requirements only'],correct:1,explain:'Standard of care is a legal benchmark — not perfection. Courts measure engineer performance against what a reasonably competent, similarly situated engineer would have done. Most professional liability cases turn on expert testimony about this standard.'},
+{id:1014,cat:'business',diff:'Beginner',fmt:'mc',q:'The FE exam is:',choices:['Final Engineering exam after PE exam','Fundamentals of Engineering exam — first step toward PE licensure','Federal Engineering board certification','Facilities and Equipment assessment for contractors'],correct:1,explain:'The FE (Fundamentals of Engineering) exam is administered by NCEES. Passing earns EIT (Engineer in Training) status. Required before taking the PE exam. Most students take it during senior year or within a year of graduation.'},
+{id:1015,cat:'business',diff:'Intermediate',fmt:'flip',q:'What is design-build delivery and how does it affect the MEP engineer?',a:'Design-build: a single entity holds contracts for both design and construction. The MEP engineer works for the DB contractor — not independently for the owner — changing the professional obligation and oversight role.',explain:'In traditional design-bid-build, the engineer is an independent owner agent. In design-build, the engineer is on the contractor team — helpful for coordination but may create pressure to reduce design quality for cost savings.'},
+{id:1016,cat:'business',diff:'Advanced',fmt:'mc',q:'What is IPD (Integrated Project Delivery)?',choices:['A single-discipline fixed-fee contract','A multi-party agreement sharing risk and reward among owner, designer, and contractor','A unit-price contract for repetitive work','A CM-at-Risk delivery method with GMP'],correct:1,explain:'IPD aligns all key parties (owner, architect, MEP engineers, GC, major subcontractors) under a single multi-party agreement with shared financial risk and reward. Encourages early BIM collaboration, target value design, and lean construction.'},
+{id:1017,cat:'business',diff:'Beginner',fmt:'tf',q:'A Change Order (CO) is a formal document modifying the contract sum or project completion date.',correct:true,explain:'Change Orders are formal contract modifications executed by owner, contractor, and architect/engineer. They document scope changes, cost impacts, and schedule impacts. The EOR reviews COs for technical accuracy and code compliance.'},
+{id:1018,cat:'business',diff:'Intermediate',fmt:'flip',q:'What is a Preliminary Engineering Report (PER) or Feasibility Study?',a:'An early-phase document evaluating technical feasibility, preliminary system concepts, applicable code requirements, and rough order-of-magnitude (ROM) costs for a proposed project',explain:'PERs help owners make go/no-go decisions before committing to full design fees. For electrical: evaluates service voltage options, emergency power requirements, utility upgrade needs, energy efficiency opportunities, and ROM construction costs.'},
+{id:1019,cat:'business',diff:'Advanced',fmt:'mc',q:"What is the Owner's Project Requirements (OPR) document?",choices:['Contractor payment schedule',"Document recording owner's functional, operational, and sustainability goals for the design",'Equipment brand preference list only',"GC's quality control program"],correct:1,explain:'The OPR captures owner expectations for: energy performance targets, system reliability/redundancy, maintenance complexity, operational goals, and occupant experience. The Cx agent uses the OPR to verify building performance meets owner intent.'},
+{id:1020,cat:'business',diff:'Beginner',fmt:'flip',q:'Difference between a prime contractor and a subcontractor?',a:'Prime (general) contractor: hired directly by owner, responsible for the entire project. Subcontractor: hired by the prime to perform a specific scope (electrical, mechanical, plumbing).',explain:'The electrical contractor is almost always a subcontractor to the GC on commercial projects. The MEP engineer contracts with the owner or architect — not directly with the electrical subcontractor.'},
+{id:1021,cat:'business',diff:'Advanced',fmt:'tf',q:'Retainage is a standard practice where the owner withholds 5-10% of each contractor payment until project completion.',correct:true,explain:'Retainage protects the owner against incomplete work or warranty failures. Released after final completion, punch list resolution, and closeout document submission (as-builts, O&M manuals, warranties, attic stock).'},
+{id:1022,cat:'business',diff:'Intermediate',fmt:'mc',q:'What is a GMP (Guaranteed Maximum Price) contract?',choices:['The engineer guarantees zero design errors','Contractor guarantees construction will not exceed a set price — savings may be shared with owner','Owner guarantees all project costs','Utility guarantees service connection costs'],correct:1,explain:'GMP contracts give owners cost certainty while allowing construction to begin before design is 100% complete (popular with CM-at-Risk delivery). The contractor bears cost risk above the GMP. Savings below GMP may be shared by agreement.'},
+{id:1023,cat:'business',diff:'Advanced',fmt:'flip',q:'What is a deferred submittal and how does it affect the EOR?',a:'A portion of work not submitted with the main permit application but submitted later — common for fire alarm, emergency power, and specialty systems. The EOR must acknowledge deferred items on permit drawings.',explain:'AHJs allow deferred submittals for complex systems designed by specialty engineers after the main permit is issued. The specialty engineer becomes the EOR for those systems. The original EOR must identify what is deferred.'},
+{id:1024,cat:'business',diff:'Beginner',fmt:'mc',q:'ASHRAE stands for:',choices:['American Society of Heating, Refrigerating and Air-Conditioning Engineers','American Standards for High-Rise Architectural Electrical Engineers','Association of State Heating and Refrigeration Agencies','American Society of Hospital Renovation and Electrical Experts'],correct:0,explain:'ASHRAE publishes ASHRAE 90.1 (energy standard used by MEP engineers for LPD limits), ASHRAE 55 (thermal comfort), ASHRAE 62.1 (ventilation), and ASHRAE 202 (commissioning). Essential resources for MEP engineers.'},
+{id:1025,cat:'business',diff:'Intermediate',fmt:'flip',q:'What is NFPA and why is it important to MEP engineers?',a:'National Fire Protection Association — publishes 300+ codes including NFPA 70 (NEC), NFPA 72 (Fire Alarm), NFPA 101 (Life Safety), NFPA 110 (Emergency Power), and NFPA 99 (Healthcare Facilities)',explain:'MEP engineers use NFPA codes daily: NEC (NFPA 70) for all wiring, NFPA 72 for fire alarm, NFPA 101 for egress lighting, NFPA 110 for emergency generator requirements, NFPA 111 for stored energy (UPS), NFPA 20 for fire pumps, NFPA 99 for healthcare.'},
+{id:1026,cat:'business',diff:'Advanced',fmt:'mc',q:'What is a "punch list" in construction?',choices:['Materials needed for next work phase','List of incomplete or deficient items contractor must correct before final payment','Upcoming inspection schedule','List of approved substitutions'],correct:1,explain:'The punch list is created at project completion during a walk-through by owner, architect, and engineers. Electrical punch list items: missing cover plates, mislabeled breakers, damaged fixtures, uncorrected commissioning findings, incomplete as-built markups.'},
+{id:1027,cat:'business',diff:'Intermediate',fmt:'tf',q:'As-built drawings document the actual installed conditions, which may differ from the original design drawings.',correct:true,explain:'Field conditions often require routing changes, equipment relocations, and deviations from the design. As-built (or record) drawings capture what was actually installed. Critical for future renovations and maintenance. Contractors are contractually required to submit as-builts at project closeout.'},
+{id:1028,cat:'business',diff:'Advanced',fmt:'flip',q:'Difference between IFC (Issued for Construction) and IFP (Issued for Permit) drawing sets?',a:'IFP: submitted to AHJ for permit review — may be 90-100% complete. IFC: final coordinated drawings issued to contractor — must reflect all coordination, addenda, and substitutions.',explain:'Some AHJs permit construction to begin on IFP drawings before all details are finalized. IFC incorporates all changes from permit review, addenda, and pre-construction coordination. The contractor builds from IFC — never from IFP alone.'},
+{id:1029,cat:'business',diff:'Beginner',fmt:'mc',q:'Purpose of a pre-construction meeting?',choices:['Negotiate change orders','Align all parties on procedures, schedule, submittals, RFI process, and communication before construction begins','Issue the building permit','Conduct the final bid opening'],correct:1,explain:'Pre-con meetings establish: submittal review turnaround times (10-14 days typically), RFI process and response times, site visit schedule, emergency contacts, BIM coordination schedule, long-lead equipment procurement schedule, and QC expectations.'},
+{id:1030,cat:'business',diff:'Advanced',fmt:'tf',q:'An EIT (Engineer in Training) designation is earned by passing the FE exam.',correct:true,explain:'EIT (also called Engineer Intern) designation is granted upon passing the NCEES FE exam. The EIT then accumulates required progressive experience (typically 4 years under PE supervision) before becoming eligible to sit for the PE exam.'},
+];
+
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+
+const LEVELS = [
+  { name:'Junior Engineer',         xp:0   },
+  { name:'EIT Candidate',           xp:200 },
+  { name:'Field Engineer',          xp:500 },
+  { name:'Design Engineer I',       xp:1000},
+  { name:'Design Engineer II',      xp:1800},
+  { name:'Senior Engineer',         xp:3000},
+  { name:'Lead Consultant',         xp:5000},
+  { name:'Principal Engineer',      xp:8000},
+];
+
+let state = loadState();
+
+let session = {
+  queue: [],
+  idx: 0,
+  correct: 0,
+  xpEarned: 0,
+  startTime: null,
+  timerInterval: null,
+  pendingRating: undefined,
+};
+
+let currentCard = null;
+let cardRevealed = false;
+let answerGiven = false;
+
+// ═══════════════════════════════════════════════════════
+//  STORAGE
+// ═══════════════════════════════════════════════════════
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('voltiq_state');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return {
+    xp: 0,
+    streak: 0,
+    totalReviewed: 0,
+    cards: {},  // id -> { interval, nextDue, rating, reviewCount }
+  };
+}
+
+function saveState() {
+  try { localStorage.setItem('voltiq_state', JSON.stringify(state)); } catch(e) {}
+}
+
+function resetProgress() {
+  state = { xp:0, streak:0, totalReviewed:0, cards:{} };
+  saveState();
+  updateHomeUI();
+}
+
+// ═══════════════════════════════════════════════════════
+//  SPACED REPETITION (SM-2 inspired)
+// ═══════════════════════════════════════════════════════
+
+function getCardData(id) {
+  if (!state.cards[id]) {
+    state.cards[id] = { interval: 0, nextDue: 0, rating: -1, reviewCount: 0 };
+  }
+  return state.cards[id];
+}
+
+function scheduleCard(id, rating) {
+  const cd = getCardData(id);
+  const now = Date.now();
+  cd.reviewCount++;
+  cd.rating = rating;
+
+  if (rating === 2) {        // Got it
+    cd.interval = cd.interval < 1 ? 3 : Math.round(cd.interval * 2.5);
+  } else if (rating === 1) { // Kinda
+    cd.interval = Math.max(1, Math.round(cd.interval * 1.3));
+  } else {                   // No idea
+    cd.interval = 0;
+  }
+
+  // nextDue in sessions (we approximate 1 session = 1 "day unit")
+  cd.nextDue = now + cd.interval * 60 * 1000 * 5; // interval in 5-min units
+  saveState();
+}
+
+function isDue(id) {
+  const cd = state.cards[id];
+  if (!cd) return true;
+  return Date.now() >= cd.nextDue;
+}
+
+function buildQueue(mode, catFilter) {
+  let pool = [...CARDS];
+  if (catFilter && catFilter !== 'all') {
+    pool = pool.filter(c => c.cat === catFilter);
+  }
+  if (mode === 'due') {
+    pool = pool.filter(c => isDue(c.id));
+  }
+  // Sort: not-seen first, then due, then weight by low rating
+  pool.sort((a, b) => {
+    const da = getCardData(a.id);
+    const db = getCardData(b.id);
+    if (da.reviewCount === 0 && db.reviewCount > 0) return -1;
+    if (db.reviewCount === 0 && da.reviewCount > 0) return 1;
+    return da.rating - db.rating;
+  });
+  // Shuffle with bias (keep low-rated near front but add some randomness)
+  for (let i = pool.length - 1; i > 0; i--) {
+    const bias = Math.floor(Math.random() * Math.min(i + 1, 4));
+    [pool[i], pool[i - bias]] = [pool[i - bias], pool[i]];
+  }
+  // Cap at ~15 cards for a 5-10 min session
+  return pool.slice(0, 15);
+}
+
+// ═══════════════════════════════════════════════════════
+//  XP / LEVELS
+// ═══════════════════════════════════════════════════════
+
+function getLevelInfo() {
+  let lvl = 0;
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (state.xp >= LEVELS[i].xp) { lvl = i; break; }
+  }
+  const next = LEVELS[lvl + 1];
+  const curr = LEVELS[lvl];
+  const xpInLevel = state.xp - curr.xp;
+  const xpNeeded = next ? next.xp - curr.xp : 1;
+  const pct = next ? Math.min(100, (xpInLevel / xpNeeded) * 100) : 100;
+  return { level: lvl + 1, name: curr.name, pct, xpInLevel, xpNeeded, nextName: next?.name };
+}
+
+function addXP(amount) {
+  const before = getLevelInfo().level;
+  state.xp += amount;
+  const after = getLevelInfo().level;
+  saveState();
+  if (after > before) showToast(`🎉 Level Up! ${getLevelInfo().name}`);
+  else showToast(`+${amount} XP`);
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'xp-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2200);
+}
+
+// ═══════════════════════════════════════════════════════
+//  HOME UI
+// ═══════════════════════════════════════════════════════
+
+function updateHomeUI() {
+  const li = getLevelInfo();
+  document.getElementById('stat-level').textContent = li.level;
+  document.getElementById('stat-xp').textContent = state.xp;
+  document.getElementById('stat-reviewed').textContent = state.totalReviewed;
+  document.getElementById('stat-streak').textContent = state.streak + '🔥';
+  const mastered = Object.values(state.cards).filter(c => c.rating === 2 && c.interval >= 3).length;
+  document.getElementById('stat-mastered').textContent = mastered;
+
+  document.getElementById('xp-level-label').textContent = `Level ${li.level} — ${li.name}`;
+  document.getElementById('xp-to-next').textContent = `${li.xpInLevel} / ${li.xpNeeded} XP`;
+  document.getElementById('xp-fill').style.width = li.pct + '%';
+
+  renderCategoryGrid();
+}
+
+function renderCategoryGrid() {
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const catCards = CARDS.filter(c => c.cat === cat.id);
+    const reviewed = catCards.filter(c => state.cards[c.id]?.reviewCount > 0).length;
+    const mastered = catCards.filter(c => state.cards[c.id]?.rating === 2).length;
+    const pct = catCards.length ? Math.round((mastered / catCards.length) * 100) : 0;
+
+    const div = document.createElement('div');
+    div.className = 'cat-card';
+    div.style.setProperty('--cat-color', cat.color);
+    div.innerHTML = `
+      <div class="cat-icon">${cat.icon}</div>
+      <div class="cat-name">${cat.name}</div>
+      <div class="cat-count">${reviewed}/${catCards.length} reviewed · ${pct}% mastered</div>
+      <div class="cat-mastery-bar"><div class="cat-mastery-fill" style="width:${pct}%"></div></div>
+    `;
+    div.onclick = () => startSession(cat.id);
+    grid.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  SESSION
+// ═══════════════════════════════════════════════════════
+
+function startSession(mode) {
+  const catFilter = (mode === 'all' || mode === 'due') ? null : mode;
+  const actualMode = (mode === 'due') ? 'due' : 'all';
+  session.queue = buildQueue(actualMode, catFilter);
+  session.idx = 0;
+  session.correct = 0;
+  session.xpEarned = 0;
+  session.startTime = Date.now();
+  session.pendingRating = undefined;
+
+  if (session.queue.length === 0) {
+    alert('No cards due for review right now! Try "Quick Review (All)" instead.');
+    return;
+  }
+
+  clearInterval(session.timerInterval);
+  startTimer();
+  showScreen('study');
+  loadCard();
+}
+
+function startTimer() {
+  const LIMIT = 10 * 60 * 1000;
+  session.timerInterval = setInterval(() => {
+    const elapsed = Date.now() - session.startTime;
+    const remaining = Math.max(0, LIMIT - elapsed);
+    const m = Math.floor(remaining / 60000);
+    const s = Math.floor((remaining % 60000) / 1000);
+    const el = document.getElementById('session-timer');
+    el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    el.classList.toggle('warn', remaining < 60000);
+    if (remaining === 0) {
+      clearInterval(session.timerInterval);
+      endSession();
+    }
+  }, 1000);
+}
+
+function loadCard() {
+  if (session.idx >= session.queue.length) { endSession(); return; }
+  currentCard = session.queue[session.idx];
+  cardRevealed = false;
+  answerGiven = false;
+
+  // Update counters
+  document.getElementById('progress-counter').textContent =
+    `${session.idx + 1} / ${session.queue.length}`;
+  document.getElementById('session-fill').style.width =
+    `${(session.idx / session.queue.length) * 100}%`;
+
+  // Category pill
+  const cat = CATEGORIES.find(c => c.id === currentCard.cat);
+  const pill = document.getElementById('card-cat-pill');
+  pill.textContent = cat.name;
+  pill.style.setProperty('--cat-color', cat.color);
+  document.getElementById('card-diff-pill').textContent = currentCard.diff;
+
+  // Reset post-answer UI
+  document.getElementById('rating-row').style.display = 'none';
+  document.getElementById('explain-panel').classList.remove('visible');
+  document.getElementById('next-btn-row').classList.remove('visible');
+  document.getElementById('explain-ref').style.display = 'none';
+  session.pendingRating = undefined;
+
+  // Show correct format
+  const fmt = currentCard.fmt;
+  document.getElementById('flip-card').style.display = fmt === 'flip' ? 'block' : 'none';
+  document.getElementById('mc-container').style.display = fmt === 'mc' ? 'block' : 'none';
+  document.getElementById('tf-container').style.display = fmt === 'tf' ? 'block' : 'none';
+
+  if (fmt === 'flip') {
+    document.getElementById('card-format-pill').textContent = 'Flip Card';
+    document.getElementById('card-inner').classList.remove('flipped');
+    document.getElementById('card-q').textContent = currentCard.q;
+    const ansEl = document.getElementById('card-a');
+    ansEl.innerHTML = `
+      <div class="answer-main">${currentCard.a}</div>
+      ${currentCard.explain ? `<div class="answer-explain">${currentCard.explain}</div>` : ''}
+      ${currentCard.ref ? `<div class="nec-ref">📋 ${currentCard.ref}</div>` : ''}
+    `;
+  } else if (fmt === 'mc') {
+    document.getElementById('card-format-pill').textContent = 'Multiple Choice';
+    document.getElementById('mc-q').textContent = currentCard.q;
+    renderMCOptions();
+  } else if (fmt === 'tf') {
+    document.getElementById('card-format-pill').textContent = 'True / False';
+    document.getElementById('tf-q').textContent = currentCard.q;
+    document.getElementById('tf-true').className = 'tf-btn';
+    document.getElementById('tf-false').className = 'tf-btn';
+    document.getElementById('tf-true').disabled = false;
+    document.getElementById('tf-false').disabled = false;
+  }
+}
+
+function flipCard() {
+  if (currentCard.fmt !== 'flip') return;
+  if (cardRevealed) return;
+  cardRevealed = true;
+  document.getElementById('card-inner').classList.add('flipped');
+  setTimeout(() => {
+    document.getElementById('rating-row').style.display = 'flex';
+  }, 400);
+}
+
+function renderMCOptions() {
+  const container = document.getElementById('mc-options');
+  container.innerHTML = '';
+  currentCard.choices.forEach((choice, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'mc-btn';
+    btn.textContent = `${String.fromCharCode(65+i)}. ${choice}`;
+    btn.onclick = () => answerMC(i, btn);
+    container.appendChild(btn);
+  });
+}
+
+function answerMC(idx, btn) {
+  if (answerGiven) return;
+  answerGiven = true;
+  const correct = idx === currentCard.correct;
+  if (correct) session.correct++;
+
+  document.querySelectorAll('.mc-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === currentCard.correct) b.classList.add('correct');
+    else if (b === btn && !correct) b.classList.add('wrong');
+  });
+
+  // Show explanation panel
+  showExplainPanel(correct, currentCard.choices[currentCard.correct]);
+
+  // Store rating for when Next is pressed
+  session.pendingRating = correct ? 2 : 0;
+  document.getElementById('next-btn-row').classList.add('visible');
+}
+
+function answerTF(answer) {
+  if (answerGiven) return;
+  answerGiven = true;
+  const correct = answer === currentCard.correct;
+  if (correct) session.correct++;
+
+  document.getElementById('tf-true').disabled = true;
+  document.getElementById('tf-false').disabled = true;
+
+  if (answer === true) {
+    document.getElementById('tf-true').classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) document.getElementById('tf-false').classList.add('correct');
+  } else {
+    document.getElementById('tf-false').classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) document.getElementById('tf-true').classList.add('correct');
+  }
+
+  // Show explanation panel (TF always has explain text)
+  showExplainPanel(correct, currentCard.correct ? 'True' : 'False');
+
+  // Store rating for when Next is pressed
+  session.pendingRating = correct ? 2 : 0;
+  document.getElementById('next-btn-row').classList.add('visible');
+}
+
+function showExplainPanel(correct, correctAnswerText) {
+  const panel = document.getElementById('explain-panel');
+  const badge = document.getElementById('explain-badge');
+  const ansLine = document.getElementById('explain-answer-line');
+  const txt = document.getElementById('explain-text');
+  const ref = document.getElementById('explain-ref');
+
+  badge.className = 'explain-result-badge ' + (correct ? 'correct-badge' : 'wrong-badge');
+  badge.textContent = correct ? '✓ Correct' : '✗ Incorrect';
+
+  ansLine.textContent = correct ? '' : `Correct answer: ${correctAnswerText}`;
+  ansLine.style.display = correct ? 'none' : 'block';
+
+  txt.textContent = currentCard.explain || '';
+
+  if (currentCard.ref) {
+    ref.textContent = '📋 ' + currentCard.ref;
+    ref.style.display = 'block';
+  } else {
+    ref.style.display = 'none';
+  }
+
+  panel.classList.add('visible');
+}
+
+function advanceCard() {
+  // Called by the Next button for all card types
+  if (session.pendingRating !== null && session.pendingRating !== undefined) {
+    // MC / TF: commit the pre-determined rating then step forward
+    commitRating(session.pendingRating);
+  }
+  stepForward();
+}
+
+function rateCard(rating) {
+  // Called by the rating buttons on flip cards
+  commitRating(rating);
+  if (rating === 2) session.correct++;
+  // Hide rating row, show Next button; mark no pending rating
+  document.getElementById('rating-row').style.display = 'none';
+  session.pendingRating = undefined;
+  document.getElementById('next-btn-row').classList.add('visible');
+}
+
+function commitRating(rating) {
+  scheduleCard(currentCard.id, rating);
+  state.totalReviewed++;
+  state.streak++;
+
+  let xp = 0;
+  if (rating === 2) xp = 15;
+  else if (rating === 1) xp = 8;
+  else xp = 5;
+
+  session.xpEarned += xp;
+  addXP(xp);
+  saveState();
+}
+
+function stepForward() {
+  session.idx++;
+  if (session.idx < session.queue.length) {
+    loadCard();
+  } else {
+    endSession();
+  }
+}
+
+function endSession() {
+  clearInterval(session.timerInterval);
+  saveState();
+  updateHomeUI();
+
+  document.getElementById('cs-correct').textContent = session.correct;
+  document.getElementById('cs-xp').textContent = session.xpEarned;
+  document.getElementById('cs-cards').textContent = session.idx;
+
+  const pct = session.idx > 0 ? Math.round((session.correct / session.idx) * 100) : 0;
+  let icon = '🎯', title = 'SESSION DONE', sub = 'Keep building those skills.';
+  if (pct >= 90) { icon = '🏆'; title = 'EXCELLENT!'; sub = 'Near-perfect recall. You\'re crushing it.'; }
+  else if (pct >= 70) { icon = '⚡'; title = 'SOLID WORK'; sub = 'Good performance. Review the misses.'; }
+  else if (pct < 40) { icon = '📚'; title = 'KEEP STUDYING'; sub = 'Every session builds the foundation.'; }
+
+  document.getElementById('complete-icon').textContent = icon;
+  document.getElementById('complete-title').textContent = title;
+  document.getElementById('complete-sub').textContent = sub;
+
+  showScreen('complete');
+}
+
+// ═══════════════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════════════
+
+function renderDashboard() {
+  const grid = document.getElementById('mastery-grid');
+  grid.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const catCards = CARDS.filter(c => c.cat === cat.id);
+    const know = catCards.filter(c => state.cards[c.id]?.rating === 2).length;
+    const kinda = catCards.filter(c => state.cards[c.id]?.rating === 1).length;
+    const nope = catCards.filter(c => state.cards[c.id]?.rating === 0).length;
+    const unseen = catCards.length - know - kinda - nope;
+    const pct = catCards.length ? Math.round((know / catCards.length) * 100) : 0;
+
+    const knowW = catCards.length ? (know/catCards.length)*100 : 0;
+    const kindaW = catCards.length ? (kinda/catCards.length)*100 : 0;
+    const nopeW = catCards.length ? (nope/catCards.length)*100 : 0;
+
+    const div = document.createElement('div');
+    div.className = 'mastery-card';
+    div.innerHTML = `
+      <div class="mastery-card-header">
+        <div class="mastery-dot" style="--cat-color:${cat.color}"></div>
+        <div class="mastery-card-name">${cat.icon} ${cat.name}</div>
+        <div class="mastery-pct" style="color:${cat.color}">${pct}%</div>
+      </div>
+      <div class="mastery-breakdown">
+        <div class="mbd"><div class="n green">${know}</div><div class="l">Mastered</div></div>
+        <div class="mbd"><div class="n yellow">${kinda}</div><div class="l">Learning</div></div>
+        <div class="mbd"><div class="n red">${nope}</div><div class="l">Struggling</div></div>
+        <div class="mbd"><div class="n" style="color:var(--text-dim)">${unseen}</div><div class="l">Unseen</div></div>
+      </div>
+      <div class="mastery-bar">
+        <div class="mastery-seg" style="background:var(--know);width:${knowW}%"></div>
+        <div class="mastery-seg" style="background:var(--kinda);width:${kindaW}%"></div>
+        <div class="mastery-seg" style="background:var(--nope);width:${nopeW}%"></div>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  SCREEN MANAGEMENT
+// ═══════════════════════════════════════════════════════
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'home') updateHomeUI();
+  if (id === 'dashboard') renderDashboard();
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+
+updateHomeUI();
+</script>
+</body>
+</html>
