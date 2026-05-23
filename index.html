@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Volt IQ — Electrical MEP Mastery</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3b82f6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Volt IQ">
+<link rel="apple-touch-icon" href="icon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -877,6 +883,191 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ══════════════════════════════════════
+     QUICK STUDY FAB
+  ══════════════════════════════════════ */
+  .qs-fab {
+    position: fixed; bottom: 22px; right: 20px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: white; border: none; border-radius: 50px;
+    padding: 14px 20px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    box-shadow: 0 6px 24px rgba(59,130,246,.45);
+    z-index: 800; display: flex; align-items: center; gap: 8px;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .qs-fab:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(59,130,246,.55); }
+  .qs-fab[hidden] { display: none !important; }
+
+  /* ══════════════════════════════════════
+     MODAL SYSTEM
+  ══════════════════════════════════════ */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+    z-index: 1000; display: flex; align-items: center; justify-content: center;
+    padding: 16px; animation: fadeIn .2s ease;
+  }
+  .modal-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; width: 100%; max-width: 540px;
+    max-height: 90vh; overflow-y: auto; animation: fadeSlideIn .25s ease;
+  }
+  @media(max-width: 540px) {
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal-box { border-radius: 22px 22px 0 0; max-width: 100%; max-height: 95vh; }
+  }
+  .modal-hd {
+    display: flex; align-items: center; gap: 10px;
+    padding: 18px 20px 16px; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--surface); z-index: 1;
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-hd-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 22px;
+    letter-spacing: 1.5px; flex: 1; line-height: 1;
+  }
+  .modal-x {
+    background: none; border: 1px solid var(--border); color: var(--text-dim);
+    width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+    font-size: 13px; display: flex; align-items: center; justify-content: center;
+    transition: border-color .15s, color .15s; flex-shrink: 0;
+  }
+  .modal-x:hover { border-color: var(--nope); color: var(--nope); }
+
+  .qs-prog-track { height: 3px; background: var(--border); overflow: hidden; }
+  .qs-prog-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width .35s ease; }
+  .qs-hd-count { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim); }
+
+  /* ══════════════════════════════════════
+     REMINDER MODAL
+  ══════════════════════════════════════ */
+  .rem-body { padding: 18px 20px 24px; }
+  .rem-desc { font-size: 13px; color: var(--text-mid); line-height: 1.65; margin-bottom: 6px; }
+  .rem-note { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-dim); line-height: 1.6; margin-bottom: 16px; }
+  .rem-status {
+    padding: 10px 14px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 12px; font-family: 'DM Mono', monospace;
+    color: var(--text-dim); margin-bottom: 16px; transition: all .2s;
+  }
+  .rem-status.on { border-color: var(--know); color: var(--know); }
+  .rem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .rem-chip {
+    padding: 16px 8px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text-mid); font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 500; cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s; text-align: center;
+  }
+  .rem-chip:hover { border-color: var(--accent); color: var(--text); }
+  .rem-chip.sel { border-color: var(--accent); background: color-mix(in srgb,var(--accent) 15%,transparent); color: var(--accent); }
+  .btn-rem-off {
+    width: 100%; padding: 12px; background: none; border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; cursor: pointer; transition: border-color .15s, color .15s; margin-top: 2px;
+  }
+  .btn-rem-off:hover { border-color: var(--nope); color: var(--nope); }
+  .ios-install-note {
+    margin-top: 12px; padding: 12px 14px;
+    background: color-mix(in srgb, var(--nec) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--nec) 25%, transparent);
+    border-radius: 8px; font-size: 12px; color: var(--nec); line-height: 1.6;
+  }
+
+  /* ══════════════════════════════════════
+     QUICK STUDY — CONFIG
+  ══════════════════════════════════════ */
+  .qs-cfg-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
+    font-family: 'DM Mono', monospace; color: var(--text-dim); margin-bottom: 10px;
+  }
+  .qs-cfg-body { padding: 18px 20px 22px; }
+  .qs-count-row { display: flex; gap: 8px; margin-bottom: 20px; }
+  .qs-count-btn {
+    flex: 1; padding: 16px 8px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text-mid); font-family: 'DM Sans', sans-serif;
+    font-size: 20px; font-weight: 700; cursor: pointer;
+    transition: border-color .15s, color .15s, background .15s; text-align: center;
+  }
+  .qs-count-btn:hover { border-color: var(--accent); color: var(--text); }
+  .qs-count-btn.sel { border-color: var(--accent); background: color-mix(in srgb,var(--accent) 15%,transparent); color: var(--accent); }
+  .qs-cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+  .qs-cat-btn {
+    padding: 12px 10px; background: var(--surface2); border: 2px solid var(--border);
+    border-radius: 10px; color: var(--text-mid); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .qs-cat-btn:hover { border-color: var(--cat-color, var(--accent)); color: var(--text); }
+  .qs-cat-btn.sel { border-color: var(--cat-color, var(--accent)); background: color-mix(in srgb, var(--cat-color, var(--accent)) 12%, transparent); color: var(--cat-color, var(--accent)); }
+
+  /* ══════════════════════════════════════
+     QUICK STUDY — CARD AREA
+  ══════════════════════════════════════ */
+  .qs-area { padding: 12px 20px 4px; }
+  .qs-card-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+  .qs-card-box {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; min-height: 100px; max-height: 240px; overflow-y: auto;
+    margin-bottom: 8px; cursor: pointer; transition: border-color .15s;
+  }
+  .qs-card-box:hover { border-color: var(--accent); }
+  .qs-card-box.static { cursor: default; }
+  .qs-card-box.static:hover { border-color: var(--border); }
+  .qs-card-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; font-family: 'DM Mono', monospace; color: var(--text-dim); margin-bottom: 10px; }
+  .qs-card-q { font-size: 16px; font-weight: 500; line-height: 1.55; color: var(--text); }
+  .qs-reveal { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); display: none; }
+  .qs-reveal.show { display: block; animation: fadeSlideIn .2s ease; }
+  .qs-tap-hint { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-dim); margin-top: 8px; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+
+  /* ══════════════════════════════════════
+     QUICK STUDY — POST-ANSWER
+  ══════════════════════════════════════ */
+  .qs-explain {
+    display: none; margin: 0 20px 8px; padding: 14px 16px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+  }
+  .qs-explain.show { display: block; animation: fadeSlideIn .25s ease; }
+  .qs-rating { display: none; gap: 8px; padding: 0 20px 8px; }
+  .qs-rating.show { display: flex; }
+  .qs-rating .rating-btn { font-size: 12px; padding: 12px 6px; }
+  .qs-rating .rating-btn .sub { font-size: 10px; }
+  .qs-next { display: none; padding: 0 20px 16px; }
+  .qs-next.show { display: block; }
+  .qs-next .btn-next { width: 100%; }
+
+  /* ══════════════════════════════════════
+     QUICK STUDY — DONE
+  ══════════════════════════════════════ */
+  .qs-done { display: none; text-align: center; padding: 32px 20px 28px; }
+  .qs-done.show { display: block; animation: fadeSlideIn .3s ease; }
+  .qs-done-icon { font-size: 48px; margin-bottom: 10px; }
+  .qs-done-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 2px; margin-bottom: 4px; }
+  .qs-done-sub { color: var(--text-dim); font-size: 13px; margin-bottom: 22px; }
+  .qs-done-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .qs-done-btns .btn-primary { flex: none; padding: 14px 24px; }
+  .qs-done-btns .btn-secondary { flex: none; padding: 14px 22px; }
+
+  /* ══════════════════════════════════════
+     REMINDER BANNER (in-app fallback)
+  ══════════════════════════════════════ */
+  .rem-banner {
+    position: fixed; bottom: 80px; left: 16px; right: 16px; max-width: 480px; margin: 0 auto;
+    background: var(--surface2); border: 1px solid var(--accent); border-radius: 12px;
+    padding: 12px 14px; display: flex; align-items: center; gap: 10px;
+    z-index: 799; animation: fadeSlideIn .3s ease; box-shadow: 0 4px 24px rgba(0,0,0,.3);
+  }
+  .rem-banner-text { flex: 1; font-size: 13px; color: var(--text); line-height: 1.4; }
+  .rem-banner-text strong { color: var(--accent); }
+  .rem-banner-btns { display: flex; gap: 6px; flex-shrink: 0; }
+  .rem-banner-study {
+    padding: 8px 14px; background: var(--accent); color: white; border: none;
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .rem-banner-snooze {
+    padding: 8px 12px; background: none; color: var(--text-dim); border: 1px solid var(--border);
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -930,6 +1121,7 @@
     <button class="btn-primary" onclick="startSession('all')">⚡ Quick Review (All)</button>
     <button class="btn-secondary" onclick="startSession('due')">📅 Due for Review</button>
     <button class="btn-secondary" onclick="showScreen('dashboard')">📊 Dashboard</button>
+    <button class="btn-secondary" onclick="openReminderModal()" style="flex:none;min-width:auto;padding:16px 18px">🔔</button>
   </div>
 </div>
 
@@ -1053,6 +1245,120 @@
   <div class="mastery-grid" id="mastery-grid"></div>
   <div style="width:100%;max-width:900px;">
     <button class="btn-secondary" onclick="if(confirm('Reset ALL progress?')) { resetProgress(); showScreen(\'home\'); }">🗑 Reset Progress</button>
+  </div>
+</div>
+
+<!-- ═══════ QUICK STUDY FAB ═══════ -->
+<button class="qs-fab" id="qs-fab" onclick="openQuickStudy()">⚡ Quick Study</button>
+
+<!-- ═══════ REMINDER MODAL ═══════ -->
+<div id="rem-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeReminderModal()">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <span class="modal-hd-title">🔔 Study Reminders</span>
+      <button class="modal-x" onclick="closeReminderModal()">✕</button>
+    </div>
+    <div class="rem-body">
+      <p class="rem-desc">Get a push notification reminding you to do a quick review session.</p>
+      <p class="rem-note">⚡ Android Chrome: works in browser tab. iOS: tap Share → "Add to Home Screen" first, then open the installed app to enable notifications.</p>
+      <div class="rem-status" id="rem-status">● Reminders off</div>
+      <div class="qs-cfg-label" style="margin-top:4px">Remind me every…</div>
+      <div class="rem-grid">
+        <button class="rem-chip" data-ms="3600000"  onclick="setReminder(3600000)">1 hour</button>
+        <button class="rem-chip" data-ms="7200000"  onclick="setReminder(7200000)">2 hours</button>
+        <button class="rem-chip" data-ms="10800000" onclick="setReminder(10800000)">3 hours</button>
+        <button class="rem-chip" data-ms="14400000" onclick="setReminder(14400000)">4 hours</button>
+      </div>
+      <button class="btn-rem-off" onclick="disableReminders()">Turn Off Reminders</button>
+      <div class="ios-install-note" id="ios-note" style="display:none">
+        📱 <strong>iOS Safari:</strong> Notifications require installing the app. Tap the Share button → "Add to Home Screen" → open Volt IQ from your home screen → return here.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ QUICK STUDY MODAL ═══════ -->
+<div id="qs-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeQuickStudy()">
+  <div class="modal-box">
+
+    <!-- Header -->
+    <div class="modal-hd">
+      <span class="modal-hd-title">⚡ Quick Study</span>
+      <span class="qs-hd-count" id="qs-counter"></span>
+      <button class="modal-x" onclick="closeQuickStudy()">✕</button>
+    </div>
+
+    <!-- Progress bar (shows during study) -->
+    <div class="qs-prog-track">
+      <div class="qs-prog-fill" id="qs-fill" style="width:0%"></div>
+    </div>
+
+    <!-- ── CONFIG SCREEN ── -->
+    <div id="qs-cfg" class="qs-cfg-body">
+      <div class="qs-cfg-label">How many cards?</div>
+      <div class="qs-count-row">
+        <button class="qs-count-btn sel" onclick="qsSetCount(3,this)">3</button>
+        <button class="qs-count-btn" onclick="qsSetCount(5,this)">5</button>
+        <button class="qs-count-btn" onclick="qsSetCount(10,this)">10</button>
+      </div>
+      <div class="qs-cfg-label">Category</div>
+      <div class="qs-cat-grid" id="qs-cat-grid">
+        <!-- populated by JS -->
+      </div>
+      <button class="btn-primary" style="width:100%;margin-top:4px" onclick="startQuickSession()">Start ⚡</button>
+    </div>
+
+    <!-- ── STUDY SCREEN ── -->
+    <div id="qs-study" style="display:none">
+
+      <!-- Card renders here -->
+      <div class="qs-area" id="qs-card-area"></div>
+
+      <!-- Multiple choice options -->
+      <div id="qs-mc-wrap" style="display:none;padding:0 20px 6px">
+        <div class="mc-options" id="qs-mc-grid"></div>
+      </div>
+
+      <!-- True/False options -->
+      <div id="qs-tf-wrap" style="display:none;padding:0 20px 6px">
+        <div class="tf-options">
+          <button class="tf-btn" id="qs-tf-t" onclick="qsAnswerTF(true)">✓ True</button>
+          <button class="tf-btn" id="qs-tf-f" onclick="qsAnswerTF(false)">✗ False</button>
+        </div>
+      </div>
+
+      <!-- Explain panel (MC/TF post-answer + flip) -->
+      <div class="qs-explain" id="qs-explain">
+        <div class="explain-result-badge" id="qs-badge"></div>
+        <div class="explain-answer-line" id="qs-ans-line" style="display:none"></div>
+        <div class="explain-text" id="qs-exp-text"></div>
+        <div class="explain-ref" id="qs-exp-ref" style="display:none"></div>
+      </div>
+
+      <!-- Rating row (flip cards only) -->
+      <div class="qs-rating" id="qs-rating">
+        <button class="rating-btn know"  onclick="qsRate(2)"><span class="emoji">✅</span><span>Got It</span><span class="sub">+15 XP</span></button>
+        <button class="rating-btn kinda" onclick="qsRate(1)"><span class="emoji">🤔</span><span>Kinda</span><span class="sub">+8 XP</span></button>
+        <button class="rating-btn nope"  onclick="qsRate(0)"><span class="emoji">❌</span><span>Nope</span><span class="sub">+5 XP</span></button>
+      </div>
+
+      <!-- Next button (MC/TF + post-flip-rate) -->
+      <div class="qs-next" id="qs-next">
+        <button class="btn-next" onclick="qsAdvance()">Next →</button>
+      </div>
+    </div>
+
+    <!-- ── DONE SCREEN ── -->
+    <div class="qs-done" id="qs-done">
+      <div class="qs-done-icon" id="qs-done-icon">🎯</div>
+      <div class="qs-done-title" id="qs-done-title">DONE!</div>
+      <div class="qs-done-sub" id="qs-done-sub"></div>
+      <div class="qs-done-btns">
+        <button class="btn-primary" onclick="openQuickStudy()">Another Round</button>
+        <button class="btn-secondary" onclick="closeQuickStudy()">Close</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1809,12 +2115,394 @@ function showScreen(id) {
   if (id === 'home') updateHomeUI();
   if (id === 'dashboard') renderDashboard();
   window.scrollTo(0, 0);
+  // Hide FAB during the full study session so it doesn't overlap the rating row
+  const fab = document.getElementById('qs-fab');
+  if (fab) fab.hidden = (id === 'study');
+}
+
+// ═══════════════════════════════════════════════════════
+//  REMINDERS
+// ═══════════════════════════════════════════════════════
+
+let _remTimer = null;
+
+function initReminders() {
+  const iv = +localStorage.getItem('voltiq_rem_iv') || 0;
+  if (!iv) return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const next = +localStorage.getItem('voltiq_rem_next') || 0;
+  const delay = Math.max(5000, next - Date.now());
+  clearTimeout(_remTimer);
+  _remTimer = setTimeout(_fireReminder, delay);
+}
+
+function _fireReminder() {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try {
+      const n = new Notification('Time to study! ⚡', {
+        body: 'Take a few minutes for a Volt IQ quick review.',
+        tag: 'voltiq-reminder',
+      });
+      n.onclick = () => { window.focus(); n.close(); openQuickStudy(); };
+    } catch (_) { _showReminderBanner(); }
+  } else {
+    _showReminderBanner();
+  }
+  const iv = +localStorage.getItem('voltiq_rem_iv') || 0;
+  if (iv) {
+    localStorage.setItem('voltiq_rem_next', Date.now() + iv);
+    _remTimer = setTimeout(_fireReminder, iv);
+  }
+}
+
+function _showReminderBanner() {
+  if (document.getElementById('rem-banner')) return;
+  const b = document.createElement('div');
+  b.id = 'rem-banner';
+  b.className = 'rem-banner';
+  b.innerHTML = `
+    <div class="rem-banner-text">⏰ <strong>Study reminder!</strong> Time for a quick review.</div>
+    <div class="rem-banner-btns">
+      <button class="rem-banner-study" onclick="document.getElementById('rem-banner').remove();openQuickStudy()">Study Now</button>
+      <button class="rem-banner-snooze" onclick="document.getElementById('rem-banner').remove()">Later</button>
+    </div>`;
+  document.body.appendChild(b);
+  setTimeout(() => { const el = document.getElementById('rem-banner'); if (el) el.remove(); }, 15000);
+}
+
+async function setReminder(ms) {
+  if (!('Notification' in window)) {
+    showToast('Notifications not supported in this browser');
+    return;
+  }
+  // iOS Safari outside of PWA: Notification exists but permission will be 'denied'
+  let perm = Notification.permission;
+  if (perm === 'default') {
+    perm = await Notification.requestPermission();
+  }
+  if (perm !== 'granted') {
+    showToast('Enable notifications in browser settings');
+    _refreshRemUI();
+    return;
+  }
+  localStorage.setItem('voltiq_rem_iv', ms);
+  localStorage.setItem('voltiq_rem_next', Date.now() + ms);
+  clearTimeout(_remTimer);
+  _remTimer = setTimeout(_fireReminder, ms);
+  _refreshRemUI();
+  showToast('✓ Reminder set!');
+}
+
+function disableReminders() {
+  clearTimeout(_remTimer); _remTimer = null;
+  localStorage.removeItem('voltiq_rem_iv');
+  localStorage.removeItem('voltiq_rem_next');
+  _refreshRemUI();
+  showToast('Reminders off');
+}
+
+function _refreshRemUI() {
+  const iv = +localStorage.getItem('voltiq_rem_iv') || 0;
+  const next = +localStorage.getItem('voltiq_rem_next') || 0;
+  const el = document.getElementById('rem-status');
+  if (el) {
+    if (iv && Notification.permission === 'granted') {
+      const mins = Math.max(0, Math.round((next - Date.now()) / 60000));
+      el.textContent = `⏰ Every ${_fmtMs(iv)} · next in ${mins < 1 ? '<1 min' : mins + ' min'}`;
+      el.className = 'rem-status on';
+    } else {
+      el.textContent = '● Reminders off';
+      el.className = 'rem-status';
+    }
+  }
+  document.querySelectorAll('.rem-chip').forEach(b => {
+    b.classList.toggle('sel', +b.dataset.ms === iv);
+  });
+}
+
+function _fmtMs(ms) {
+  if (ms < 3600000) return Math.round(ms / 60000) + ' min';
+  const h = Math.round(ms / 3600000);
+  return h + (h === 1 ? ' hour' : ' hours');
+}
+
+function openReminderModal() {
+  _refreshRemUI();
+  // Show iOS install note if Notification API is absent/unusable outside PWA
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const note = document.getElementById('ios-note');
+  if (note) note.style.display = (isIOS && !isPWA) ? 'block' : 'none';
+  document.getElementById('rem-modal').style.display = 'flex';
+}
+function closeReminderModal() { document.getElementById('rem-modal').style.display = 'none'; }
+
+// ═══════════════════════════════════════════════════════
+//  QUICK STUDY
+// ═══════════════════════════════════════════════════════
+
+const qs = {
+  queue: [], idx: 0, correct: 0, xpEarned: 0,
+  card: null, revealed: false, answered: false, pending: undefined,
+  cfg: { count: 3, cat: '' }
+};
+
+function _buildQsPool(count, catId) {
+  let pool = [...CARDS];
+  if (catId) pool = pool.filter(c => c.cat === catId);
+  pool.sort((a, b) => {
+    const da = getCardData(a.id), db = getCardData(b.id);
+    if (da.reviewCount === 0 && db.reviewCount > 0) return -1;
+    if (db.reviewCount === 0 && da.reviewCount > 0) return 1;
+    return da.rating - db.rating;
+  });
+  // Light shuffle that keeps low-rated / unseen cards near the front
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.max(0, i - Math.floor(Math.random() * 4));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, count);
+}
+
+function _buildQsCatGrid() {
+  const grid = document.getElementById('qs-cat-grid');
+  grid.innerHTML = `<button class="qs-cat-btn${qs.cfg.cat === '' ? ' sel' : ''}" onclick="qsSetCat('',this)">All Categories</button>`;
+  CATEGORIES.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'qs-cat-btn' + (qs.cfg.cat === cat.id ? ' sel' : '');
+    btn.style.setProperty('--cat-color', cat.color);
+    btn.textContent = cat.icon + ' ' + cat.name;
+    btn.onclick = () => qsSetCat(cat.id, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function qsSetCount(n, btn) {
+  qs.cfg.count = n;
+  document.querySelectorAll('.qs-count-btn').forEach(b => b.classList.toggle('sel', b === btn));
+}
+
+function qsSetCat(cat, btn) {
+  qs.cfg.cat = cat;
+  document.querySelectorAll('.qs-cat-btn').forEach(b => b.classList.toggle('sel', b === btn));
+}
+
+function openQuickStudy() {
+  _buildQsCatGrid();
+  // Reset to config screen
+  document.getElementById('qs-cfg').style.display = 'block';
+  document.getElementById('qs-study').style.display = 'none';
+  document.getElementById('qs-done').className = 'qs-done';
+  document.getElementById('qs-fill').style.width = '0%';
+  document.getElementById('qs-counter').textContent = '';
+  // Restore count selection
+  document.querySelectorAll('.qs-count-btn').forEach(b => {
+    b.classList.toggle('sel', +b.textContent === qs.cfg.count);
+  });
+  document.getElementById('qs-modal').style.display = 'flex';
+}
+
+function closeQuickStudy() {
+  document.getElementById('qs-modal').style.display = 'none';
+}
+
+function startQuickSession() {
+  const pool = _buildQsPool(qs.cfg.count, qs.cfg.cat || null);
+  if (!pool.length) { showToast('No cards for that category yet!'); return; }
+  qs.queue = pool;
+  qs.idx = 0; qs.correct = 0; qs.xpEarned = 0;
+  document.getElementById('qs-cfg').style.display = 'none';
+  document.getElementById('qs-study').style.display = 'block';
+  document.getElementById('qs-done').className = 'qs-done';
+  _qsLoadCard();
+}
+
+function _qsLoadCard() {
+  if (qs.idx >= qs.queue.length) { _qsDone(); return; }
+  qs.card = qs.queue[qs.idx];
+  qs.revealed = false; qs.answered = false; qs.pending = undefined;
+
+  const total = qs.queue.length;
+  document.getElementById('qs-counter').textContent = `${qs.idx + 1} / ${total}`;
+  document.getElementById('qs-fill').style.width = `${(qs.idx / total) * 100}%`;
+
+  // Reset post-answer panels
+  document.getElementById('qs-mc-wrap').style.display = 'none';
+  document.getElementById('qs-tf-wrap').style.display = 'none';
+  document.getElementById('qs-explain').className = 'qs-explain';
+  document.getElementById('qs-rating').className = 'qs-rating';
+  document.getElementById('qs-next').className = 'qs-next';
+
+  const card = qs.card;
+  const cat = CATEGORIES.find(c => c.id === card.cat);
+  const area = document.getElementById('qs-card-area');
+
+  const meta = `<div class="qs-card-meta">
+    <span class="cat-pill" style="--cat-color:${cat.color}">${cat.name}</span>
+    <span class="diff-pill">${card.diff}</span>
+  </div>`;
+
+  if (card.fmt === 'flip') {
+    area.innerHTML = meta + `
+      <div class="qs-card-box" id="qs-flip-box" onclick="qsFlip()">
+        <div class="qs-card-lbl" id="qs-flip-lbl">Question — tap to reveal</div>
+        <div class="qs-card-q">${card.q}</div>
+        <div class="qs-reveal" id="qs-flip-reveal">
+          <div class="answer-main" style="font-size:15px">${card.a}</div>
+          ${card.explain ? `<div class="answer-explain" style="margin-top:10px;font-size:13px">${card.explain}</div>` : ''}
+          ${card.ref ? `<div class="nec-ref" style="margin-top:8px;font-size:11px">📋 ${card.ref}</div>` : ''}
+        </div>
+      </div>`;
+
+  } else if (card.fmt === 'mc') {
+    area.innerHTML = meta + `
+      <div class="qs-card-box static">
+        <div class="qs-card-lbl">Multiple Choice</div>
+        <div class="qs-card-q">${card.q}</div>
+      </div>`;
+    const grid = document.getElementById('qs-mc-grid');
+    grid.innerHTML = '';
+    card.choices.forEach((ch, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'mc-btn';
+      btn.textContent = `${String.fromCharCode(65 + i)}. ${ch}`;
+      btn.onclick = () => qsAnswerMC(i, btn);
+      grid.appendChild(btn);
+    });
+    document.getElementById('qs-mc-wrap').style.display = 'block';
+
+  } else { // tf
+    area.innerHTML = meta + `
+      <div class="qs-card-box static">
+        <div class="qs-card-lbl">True or False?</div>
+        <div class="qs-card-q">${card.q}</div>
+      </div>`;
+    ['qs-tf-t', 'qs-tf-f'].forEach(id => {
+      const b = document.getElementById(id);
+      b.className = 'tf-btn'; b.disabled = false;
+    });
+    document.getElementById('qs-tf-wrap').style.display = 'block';
+  }
+}
+
+function qsFlip() {
+  if (qs.revealed) return;
+  qs.revealed = true;
+  document.getElementById('qs-flip-reveal').classList.add('show');
+  document.getElementById('qs-flip-lbl').textContent = 'Answer';
+  const box = document.getElementById('qs-flip-box');
+  if (box) { box.onclick = null; box.classList.add('static'); }
+  setTimeout(() => { document.getElementById('qs-rating').className = 'qs-rating show'; }, 80);
+}
+
+function qsAnswerMC(idx, btn) {
+  if (qs.answered) return;
+  qs.answered = true;
+  const correct = idx === qs.card.correct;
+  if (correct) qs.correct++;
+  document.querySelectorAll('#qs-mc-grid .mc-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === qs.card.correct) b.classList.add('correct');
+    else if (b === btn && !correct) b.classList.add('wrong');
+  });
+  _qsShowExplain(correct, qs.card.choices[qs.card.correct]);
+  qs.pending = correct ? 2 : 0;
+  document.getElementById('qs-next').className = 'qs-next show';
+}
+
+function qsAnswerTF(answer) {
+  if (qs.answered) return;
+  qs.answered = true;
+  const correct = (answer === qs.card.correct);
+  if (correct) qs.correct++;
+  const tBtn = document.getElementById('qs-tf-t');
+  const fBtn = document.getElementById('qs-tf-f');
+  tBtn.disabled = true; fBtn.disabled = true;
+  if (answer === true) {
+    tBtn.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) fBtn.classList.add('correct');
+  } else {
+    fBtn.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) tBtn.classList.add('correct');
+  }
+  _qsShowExplain(correct, qs.card.correct ? 'True' : 'False');
+  qs.pending = correct ? 2 : 0;
+  document.getElementById('qs-next').className = 'qs-next show';
+}
+
+function _qsShowExplain(correct, correctText) {
+  const badge = document.getElementById('qs-badge');
+  badge.className = 'explain-result-badge ' + (correct ? 'correct-badge' : 'wrong-badge');
+  badge.textContent = correct ? '✓ Correct' : '✗ Incorrect';
+  const ansLine = document.getElementById('qs-ans-line');
+  if (!correct) { ansLine.textContent = `Correct: ${correctText}`; ansLine.style.display = 'block'; }
+  else ansLine.style.display = 'none';
+  document.getElementById('qs-exp-text').textContent = qs.card.explain || '';
+  const ref = document.getElementById('qs-exp-ref');
+  if (qs.card.ref) { ref.textContent = '📋 ' + qs.card.ref; ref.style.display = 'block'; }
+  else ref.style.display = 'none';
+  document.getElementById('qs-explain').className = 'qs-explain show';
+}
+
+function qsRate(rating) {
+  // Called by flip card rating buttons
+  scheduleCard(qs.card.id, rating);
+  state.totalReviewed++; state.streak++;
+  const xp = rating === 2 ? 15 : rating === 1 ? 8 : 5;
+  qs.xpEarned += xp;
+  addXP(xp);
+  if (rating === 2) qs.correct++;
+  saveState();
+  qs.pending = undefined;
+  document.getElementById('qs-rating').className = 'qs-rating';
+  document.getElementById('qs-next').className = 'qs-next show';
+}
+
+function qsAdvance() {
+  // Commit pending rating (MC/TF), then advance
+  if (qs.pending !== undefined) {
+    scheduleCard(qs.card.id, qs.pending);
+    state.totalReviewed++; state.streak++;
+    const xp = qs.pending === 2 ? 15 : 5;
+    qs.xpEarned += xp;
+    addXP(xp);
+    saveState();
+    qs.pending = undefined;
+  }
+  qs.idx++;
+  _qsLoadCard();
+}
+
+function _qsDone() {
+  document.getElementById('qs-study').style.display = 'none';
+  document.getElementById('qs-fill').style.width = '100%';
+  document.getElementById('qs-counter').textContent = 'Done!';
+  const total = qs.queue.length;
+  const pct = total > 0 ? Math.round((qs.correct / total) * 100) : 0;
+  let icon = '🎯', title = 'DONE!';
+  if (pct >= 80) { icon = '🏆'; title = 'GREAT WORK!'; }
+  else if (pct < 40) { icon = '📚'; title = 'KEEP GOING'; }
+  document.getElementById('qs-done-icon').textContent = icon;
+  document.getElementById('qs-done-title').textContent = title;
+  document.getElementById('qs-done-sub').textContent = `${qs.correct}/${total} correct · +${qs.xpEarned} XP earned`;
+  document.getElementById('qs-done').className = 'qs-done show';
+  updateHomeUI();
 }
 
 // ═══════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════
 
+// Register service worker for PWA / offline support
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+  // When user taps the notification, the SW posts a message to open Quick Study
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data?.type === 'OPEN_QUICK_STUDY') openQuickStudy();
+  });
+}
+
+initReminders();
 updateHomeUI();
 </script>
 </body>
